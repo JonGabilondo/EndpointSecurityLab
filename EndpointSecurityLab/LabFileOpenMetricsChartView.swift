@@ -12,7 +12,7 @@ private enum Constant {
     static let timerLapse : TimeInterval = 2
 }
 
-struct FileOpenMetricsData : Identifiable {
+struct FileOpenThroughputSample : Identifiable {
     var eventCount : UInt64
     var sampleIndex : UInt64
     var id: String
@@ -30,45 +30,38 @@ enum ChartType: String, CaseIterable {
     static var description = "type"
 }
 
-
 class FileOpenViewModel : ObservableObject {
     
     @Published var chosenChartType: ChartType = .throughput
-    @Published var data : [FileOpenMetricsData] = []
-}
-
-class FileOpenPerProcessViewModel : ObservableObject {
-    
-    @Published var data : [FileOpenPerProcessData] = []
+    @Published var throughputData : [FileOpenThroughputSample] = []
+    @Published var perProcessData : [FileOpenPerProcessData] = []
 }
 
 struct LabFileOpenMetricsChartView: View {
     
     private func populateViewDataModel(viewDataModel : FileOpenViewModel) {
-        viewDataModel.data.removeAll()
-        var sampleIndex : UInt64 = 0
-        for (eventCount) in LabFileOpenMetrics.gFileOpenEventsTroughputRecord {
-            let event : FileOpenMetricsData = FileOpenMetricsData(eventCount: eventCount, sampleIndex: sampleIndex, id: "")
-            viewDataModel.data.append(event)
+        var sampleIndex : UInt64 = UInt64(viewDataModel.throughputData.count)
+        for i in viewDataModel.throughputData.count..<LabFileOpenMetrics.gFileOpenEventsTroughputRecord.count {
+            let sampleCount = LabFileOpenMetrics.gFileOpenEventsTroughputRecord[i]
+            let event : FileOpenThroughputSample = FileOpenThroughputSample(eventCount: sampleCount, sampleIndex: sampleIndex, id: "")
+            viewDataModel.throughputData.append(event)
             sampleIndex += 1
         }
     }
     
-    private func populateProcEventsViewDataModel(viewDataModel : FileOpenPerProcessViewModel) {
-        viewDataModel.data.removeAll()
+    private func populateProcEventsViewDataModel(viewDataModel : FileOpenViewModel) {
+        viewDataModel.perProcessData.removeAll()
         for (procPath, eventData) in LabFileOpenMetrics.gFileOpenEventsPerProcDict {
-            viewDataModel.data.append(FileOpenPerProcessData(procPath: procPath, eventCount: eventData.eventCount, id:""))
+            viewDataModel.perProcessData.append(FileOpenPerProcessData(procPath: procPath, eventCount: eventData.eventCount, id:""))
         }
     }
 
 
-    @StateObject var viewModel = FileOpenViewModel()
-    @StateObject var processEventsViewModel = FileOpenPerProcessViewModel()
+    @StateObject private var viewModel = FileOpenViewModel()
     
     var body: some View {
         
         @ObservedObject var openFileDataModel = viewModel
-        @ObservedObject var openFilePerProcessViewModel = processEventsViewModel
 
         let timer = Timer.publish(every: Constant.timerLapse, on: .current, in: .common).autoconnect()
         
@@ -93,11 +86,11 @@ struct LabFileOpenMetricsChartView: View {
         }
         .onReceive(timer) { val in
             populateViewDataModel(viewDataModel: openFileDataModel)
-            populateProcEventsViewDataModel(viewDataModel: openFilePerProcessViewModel)
+            populateProcEventsViewDataModel(viewDataModel: openFileDataModel)
         }
         .onAppear() {
             populateViewDataModel(viewDataModel: openFileDataModel)
-            populateProcEventsViewDataModel(viewDataModel: openFilePerProcessViewModel)
+            populateProcEventsViewDataModel(viewDataModel: openFileDataModel)
         }
         
         
@@ -120,7 +113,7 @@ struct LabFileOpenMetricsChartView: View {
                 .bold()
                 .padding(.top)
 
-            Chart(openFileDataModel.data) {
+            Chart(openFileDataModel.throughputData) {
                 LineMark(
                     x: .value("Index", $0.sampleIndex),
                     y: .value("Count", $0.eventCount)
@@ -143,13 +136,13 @@ struct LabFileOpenMetricsChartView: View {
     
     private var PerProcessChart : some View {
 
-        @ObservedObject var openFilePerProcessViewModel = processEventsViewModel
+        @ObservedObject var openFileDataModel = viewModel
 
         return VStack {
             Text("File-Open Per Process")
                 .bold()
             
-            Chart(openFilePerProcessViewModel.data) {
+            Chart(openFileDataModel.perProcessData) {
                 BarMark(
                     x: .value("event count", $0.eventCount),
                     y: .value("proc path", $0.procPath)

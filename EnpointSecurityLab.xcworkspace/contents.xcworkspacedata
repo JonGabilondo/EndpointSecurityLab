@@ -4,7 +4,4 @@
    <FileRef
       location = "group:EndpointSecurityLab.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:zep_metrics/zep_metrics.xcodeproj">
-   </FileRef>
 </Workspace>

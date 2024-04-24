@@ -41,7 +41,7 @@ struct AuthMetricsChart: View {
         for (eventId, eventData) in gEventsRecord {
             viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.min, deadlineCategory:"min", deadlineColor: .pink))
             if (eventData.min != eventData.max) {
-                viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.max+55, deadlineCategory:"max", deadlineColor: .purple))
+                viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.max, deadlineCategory:"max", deadlineColor: .purple))
             }
         }
     }
@@ -62,7 +62,7 @@ struct AuthMetricsChart: View {
                 Chart {
                     ForEach(authEventsDataModel.data) {
                         let count = $0.count
-                        let name = $0.eventType
+                        let name : String = $0.eventType
                         BarMark(
                             x: .value("count", count),
                             y: .value("name", name)
@@ -79,10 +79,19 @@ struct AuthMetricsChart: View {
                 }
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
-                .onTapGesture(count: 2, perform: { location in
-                                    //self.location = location
-                                 })
-
+//                .chartOverlay { (chartProxy : ChartProxy) in
+//                    //GeometryReader { geometry in
+//                    Rectangle().fill(.clear).contentShape(Rectangle())
+//                        .onTapGesture { location in
+//                            //                        var y = chartProxy.value(atY: location.y as: String.self)
+//                            let (count, name) = chartProxy.value(at: location, as: (UInt64, String).self)!
+//                            
+//                            //Check if value is included in the data from the chart
+//                            print("Tapped ! \(location) \(count) \(name)")
+//                            
+//                            AuthAnnotationView(eventName: name)
+//                        }
+//                }
             }
             .padding(EdgeInsets(top:Constant.topPadding,leading:Constant.leadingPadding,bottom:Constant.bottomPadding,trailing:Constant.trailingPadding))
             
@@ -123,6 +132,26 @@ struct AuthMetricsChart: View {
 
     }
 }
+
+struct AuthAnnotationView: View {
+    let eventName : String
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(eventName)
+                .font(.headline)
+            Divider()
+//            ForEach(products) { product in
+//                let name = product.name
+//                let sales = product.salesData[monthNumber]
+//                Text("\(name): \(sales, format: .currency(code: "NZD"))")
+//            }
+        }
+        .padding()
+        .background(Color(nsColor: .controlBackgroundColor))
+    }
+}
+
 
 #Preview {
     AuthMetricsChart()
