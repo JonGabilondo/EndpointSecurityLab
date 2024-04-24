@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		036853892BB4727E00C2E095 /* 1.py in Resources */ = {isa = PBXBuildFile; fileRef = 036853882BB4727E00C2E095 /* 1.py */; };
 		0368545A2BBEB15000C2E095 /* LabESEventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036854592BBEB15000C2E095 /* LabESEventTypes.swift */; };
 		0368545C2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */; };
 		0368545E2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */; };
@@ -23,16 +22,9 @@
 		037611942BB2CD860099B2D2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 037611932BB2CD860099B2D2 /* Preview Assets.xcassets */; };
 		0376119E2BB2E4510099B2D2 /* LabAllAuthMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376119D2BB2E4510099B2D2 /* LabAllAuthMetrics.swift */; };
 		037611A12BB314960099B2D2 /* libEndpointSecurity.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */; };
-		037611A92BB337F10099B2D2 /* zdpd_process_upgrades.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A32BB337F10099B2D2 /* zdpd_process_upgrades.py */; };
-		037611AA2BB337F10099B2D2 /* zdpd_classification.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A42BB337F10099B2D2 /* zdpd_classification.py */; };
-		037611AB2BB337F10099B2D2 /* zdpd_process_events.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A52BB337F10099B2D2 /* zdpd_process_events.py */; };
-		037611AC2BB337F10099B2D2 /* zdpesd_events.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A62BB337F10099B2D2 /* zdpesd_events.py */; };
-		037611AD2BB337F10099B2D2 /* zdpd_inbound_events.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A72BB337F10099B2D2 /* zdpd_inbound_events.py */; };
-		037611AE2BB337F10099B2D2 /* zdpd_inbound_processes.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A82BB337F10099B2D2 /* zdpd_inbound_processes.py */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		036853882BB4727E00C2E095 /* 1.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = 1.py; path = Python/1.py; sourceTree = "<group>"; };
 		036854592BBEB15000C2E095 /* LabESEventTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabESEventTypes.swift; sourceTree = "<group>"; };
 		0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabFileOpenMetrics.swift; sourceTree = "<group>"; };
 		0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabFileOpenMetricsChartView.swift; sourceTree = "<group>"; };
@@ -45,12 +37,6 @@
 		037611952BB2CD860099B2D2 /* EndpointSecurityLab.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EndpointSecurityLab.entitlements; sourceTree = "<group>"; };
 		0376119D2BB2E4510099B2D2 /* LabAllAuthMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAllAuthMetrics.swift; sourceTree = "<group>"; };
 		037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libEndpointSecurity.tbd; path = usr/lib/libEndpointSecurity.tbd; sourceTree = SDKROOT; };
-		037611A32BB337F10099B2D2 /* zdpd_process_upgrades.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_process_upgrades.py; path = Python/zdpd_process_upgrades.py; sourceTree = "<group>"; };
-		037611A42BB337F10099B2D2 /* zdpd_classification.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_classification.py; path = Python/zdpd_classification.py; sourceTree = "<group>"; };
-		037611A52BB337F10099B2D2 /* zdpd_process_events.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_process_events.py; path = Python/zdpd_process_events.py; sourceTree = "<group>"; };
-		037611A62BB337F10099B2D2 /* zdpesd_events.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpesd_events.py; path = Python/zdpesd_events.py; sourceTree = "<group>"; };
-		037611A72BB337F10099B2D2 /* zdpd_inbound_events.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_inbound_events.py; path = Python/zdpd_inbound_events.py; sourceTree = "<group>"; };
-		037611A82BB337F10099B2D2 /* zdpd_inbound_processes.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_inbound_processes.py; path = Python/zdpd_inbound_processes.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +101,6 @@
 				0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */,
 				036854A32BC59C1600C2E095 /* View */,
 				0368545F2BBEF26E00C2E095 /* Supporting Files */,
-				037611A22BB3377B0099B2D2 /* Python */,
 				037611922BB2CD860099B2D2 /* Preview Content */,
 			);
 			path = EndpointSecurityLab;
@@ -135,20 +120,6 @@
 				037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		037611A22BB3377B0099B2D2 /* Python */ = {
-			isa = PBXGroup;
-			children = (
-				036853882BB4727E00C2E095 /* 1.py */,
-				037611A42BB337F10099B2D2 /* zdpd_classification.py */,
-				037611A72BB337F10099B2D2 /* zdpd_inbound_events.py */,
-				037611A82BB337F10099B2D2 /* zdpd_inbound_processes.py */,
-				037611A52BB337F10099B2D2 /* zdpd_process_events.py */,
-				037611A32BB337F10099B2D2 /* zdpd_process_upgrades.py */,
-				037611A62BB337F10099B2D2 /* zdpesd_events.py */,
-			);
-			name = Python;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,15 +190,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				036853892BB4727E00C2E095 /* 1.py in Resources */,
-				037611AB2BB337F10099B2D2 /* zdpd_process_events.py in Resources */,
-				037611A92BB337F10099B2D2 /* zdpd_process_upgrades.py in Resources */,
-				037611AC2BB337F10099B2D2 /* zdpesd_events.py in Resources */,
-				037611AE2BB337F10099B2D2 /* zdpd_inbound_processes.py in Resources */,
-				037611AA2BB337F10099B2D2 /* zdpd_classification.py in Resources */,
 				037611942BB2CD860099B2D2 /* Preview Assets.xcassets in Resources */,
 				037611912BB2CD860099B2D2 /* Assets.xcassets in Resources */,
-				037611AD2BB337F10099B2D2 /* zdpd_inbound_events.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
