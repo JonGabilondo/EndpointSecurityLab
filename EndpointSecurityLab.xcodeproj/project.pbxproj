@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		036853892BB4727E00C2E095 /* 1.py in Resources */ = {isa = PBXBuildFile; fileRef = 036853882BB4727E00C2E095 /* 1.py */; };
+		0368545A2BBEB15000C2E095 /* LabESEventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036854592BBEB15000C2E095 /* LabESEventTypes.swift */; };
+		0368545C2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */; };
+		0368545E2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */; };
+		036854632BC3034900C2E095 /* LabAuthChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036854622BC3034900C2E095 /* LabAuthChartsView.swift */; };
+		036854662BC3E03C00C2E095 /* BitCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 036854652BC3E03C00C2E095 /* BitCollections */; };
+		036854682BC3E03C00C2E095 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 036854672BC3E03C00C2E095 /* Collections */; };
+		0368546A2BC3E03C00C2E095 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 036854692BC3E03C00C2E095 /* DequeModule */; };
+		0368546C2BC3E03C00C2E095 /* HashTreeCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 0368546B2BC3E03C00C2E095 /* HashTreeCollections */; };
+		0368546E2BC3E03C00C2E095 /* HeapModule in Frameworks */ = {isa = PBXBuildFile; productRef = 0368546D2BC3E03C00C2E095 /* HeapModule */; };
+		0376118D2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376118C2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift */; };
+		0376118F2BB2CD850099B2D2 /* LabMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376118E2BB2CD850099B2D2 /* LabMainView.swift */; };
+		037611912BB2CD860099B2D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 037611902BB2CD860099B2D2 /* Assets.xcassets */; };
+		037611942BB2CD860099B2D2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 037611932BB2CD860099B2D2 /* Preview Assets.xcassets */; };
+		0376119E2BB2E4510099B2D2 /* LabAllAuthMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376119D2BB2E4510099B2D2 /* LabAllAuthMetrics.swift */; };
+		037611A12BB314960099B2D2 /* libEndpointSecurity.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */; };
+		037611A92BB337F10099B2D2 /* zdpd_process_upgrades.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A32BB337F10099B2D2 /* zdpd_process_upgrades.py */; };
+		037611AA2BB337F10099B2D2 /* zdpd_classification.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A42BB337F10099B2D2 /* zdpd_classification.py */; };
+		037611AB2BB337F10099B2D2 /* zdpd_process_events.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A52BB337F10099B2D2 /* zdpd_process_events.py */; };
+		037611AC2BB337F10099B2D2 /* zdpesd_events.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A62BB337F10099B2D2 /* zdpesd_events.py */; };
+		037611AD2BB337F10099B2D2 /* zdpd_inbound_events.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A72BB337F10099B2D2 /* zdpd_inbound_events.py */; };
+		037611AE2BB337F10099B2D2 /* zdpd_inbound_processes.py in Resources */ = {isa = PBXBuildFile; fileRef = 037611A82BB337F10099B2D2 /* zdpd_inbound_processes.py */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		036853882BB4727E00C2E095 /* 1.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = 1.py; path = Python/1.py; sourceTree = "<group>"; };
+		036854592BBEB15000C2E095 /* LabESEventTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabESEventTypes.swift; sourceTree = "<group>"; };
+		0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabFileOpenMetrics.swift; sourceTree = "<group>"; };
+		0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabFileOpenMetricsChartView.swift; sourceTree = "<group>"; };
+		036854622BC3034900C2E095 /* LabAuthChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAuthChartsView.swift; sourceTree = "<group>"; };
+		037611892BB2CD850099B2D2 /* EndpointSecurityLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EndpointSecurityLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0376118C2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointSecurityLabApp.swift; sourceTree = "<group>"; };
+		0376118E2BB2CD850099B2D2 /* LabMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabMainView.swift; sourceTree = "<group>"; };
+		037611902BB2CD860099B2D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		037611932BB2CD860099B2D2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		037611952BB2CD860099B2D2 /* EndpointSecurityLab.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EndpointSecurityLab.entitlements; sourceTree = "<group>"; };
+		0376119D2BB2E4510099B2D2 /* LabAllAuthMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAllAuthMetrics.swift; sourceTree = "<group>"; };
+		037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libEndpointSecurity.tbd; path = usr/lib/libEndpointSecurity.tbd; sourceTree = SDKROOT; };
+		037611A32BB337F10099B2D2 /* zdpd_process_upgrades.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_process_upgrades.py; path = Python/zdpd_process_upgrades.py; sourceTree = "<group>"; };
+		037611A42BB337F10099B2D2 /* zdpd_classification.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_classification.py; path = Python/zdpd_classification.py; sourceTree = "<group>"; };
+		037611A52BB337F10099B2D2 /* zdpd_process_events.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_process_events.py; path = Python/zdpd_process_events.py; sourceTree = "<group>"; };
+		037611A62BB337F10099B2D2 /* zdpesd_events.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpesd_events.py; path = Python/zdpesd_events.py; sourceTree = "<group>"; };
+		037611A72BB337F10099B2D2 /* zdpd_inbound_events.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_inbound_events.py; path = Python/zdpd_inbound_events.py; sourceTree = "<group>"; };
+		037611A82BB337F10099B2D2 /* zdpd_inbound_processes.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = zdpd_inbound_processes.py; path = Python/zdpd_inbound_processes.py; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		037611862BB2CD850099B2D2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0368546C2BC3E03C00C2E095 /* HashTreeCollections in Frameworks */,
+				036854682BC3E03C00C2E095 /* Collections in Frameworks */,
+				0368546A2BC3E03C00C2E095 /* DequeModule in Frameworks */,
+				036854662BC3E03C00C2E095 /* BitCollections in Frameworks */,
+				0368546E2BC3E03C00C2E095 /* HeapModule in Frameworks */,
+				037611A12BB314960099B2D2 /* libEndpointSecurity.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0368545F2BBEF26E00C2E095 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				037611902BB2CD860099B2D2 /* Assets.xcassets */,
+				037611952BB2CD860099B2D2 /* EndpointSecurityLab.entitlements */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		036854A32BC59C1600C2E095 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0376118E2BB2CD850099B2D2 /* LabMainView.swift */,
+				036854622BC3034900C2E095 /* LabAuthChartsView.swift */,
+				0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		037611802BB2CD850099B2D2 = {
+			isa = PBXGroup;
+			children = (
+				0376118B2BB2CD850099B2D2 /* EndpointSecurityLab */,
+				0376118A2BB2CD850099B2D2 /* Products */,
+				0376119F2BB3146C0099B2D2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		0376118A2BB2CD850099B2D2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				037611892BB2CD850099B2D2 /* EndpointSecurityLab.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0376118B2BB2CD850099B2D2 /* EndpointSecurityLab */ = {
+			isa = PBXGroup;
+			children = (
+				036854592BBEB15000C2E095 /* LabESEventTypes.swift */,
+				0376118C2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift */,
+				0376119D2BB2E4510099B2D2 /* LabAllAuthMetrics.swift */,
+				0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */,
+				036854A32BC59C1600C2E095 /* View */,
+				0368545F2BBEF26E00C2E095 /* Supporting Files */,
+				037611A22BB3377B0099B2D2 /* Python */,
+				037611922BB2CD860099B2D2 /* Preview Content */,
+			);
+			path = EndpointSecurityLab;
+			sourceTree = "<group>";
+		};
+		037611922BB2CD860099B2D2 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				037611932BB2CD860099B2D2 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		0376119F2BB3146C0099B2D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		037611A22BB3377B0099B2D2 /* Python */ = {
+			isa = PBXGroup;
+			children = (
+				036853882BB4727E00C2E095 /* 1.py */,
+				037611A42BB337F10099B2D2 /* zdpd_classification.py */,
+				037611A72BB337F10099B2D2 /* zdpd_inbound_events.py */,
+				037611A82BB337F10099B2D2 /* zdpd_inbound_processes.py */,
+				037611A52BB337F10099B2D2 /* zdpd_process_events.py */,
+				037611A32BB337F10099B2D2 /* zdpd_process_upgrades.py */,
+				037611A62BB337F10099B2D2 /* zdpesd_events.py */,
+			);
+			name = Python;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		037611882BB2CD850099B2D2 /* EndpointSecurityLab */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 037611982BB2CD860099B2D2 /* Build configuration list for PBXNativeTarget "EndpointSecurityLab" */;
+			buildPhases = (
+				037611852BB2CD850099B2D2 /* Sources */,
+				037611862BB2CD850099B2D2 /* Frameworks */,
+				037611872BB2CD850099B2D2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EndpointSecurityLab;
+			packageProductDependencies = (
+				036854652BC3E03C00C2E095 /* BitCollections */,
+				036854672BC3E03C00C2E095 /* Collections */,
+				036854692BC3E03C00C2E095 /* DequeModule */,
+				0368546B2BC3E03C00C2E095 /* HashTreeCollections */,
+				0368546D2BC3E03C00C2E095 /* HeapModule */,
+			);
+			productName = EndpointSecurityLab;
+			productReference = 037611892BB2CD850099B2D2 /* EndpointSecurityLab.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		037611812BB2CD850099B2D2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1510;
+				LastUpgradeCheck = 1510;
+				TargetAttributes = {
+					037611882BB2CD850099B2D2 = {
+						CreatedOnToolsVersion = 15.1;
+					};
+				};
+			};
+			buildConfigurationList = 037611842BB2CD850099B2D2 /* Build configuration list for PBXProject "EndpointSecurityLab" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 037611802BB2CD850099B2D2;
+			packageReferences = (
+				036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */,
+			);
+			productRefGroup = 0376118A2BB2CD850099B2D2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				037611882BB2CD850099B2D2 /* EndpointSecurityLab */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		037611872BB2CD850099B2D2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				036853892BB4727E00C2E095 /* 1.py in Resources */,
+				037611AB2BB337F10099B2D2 /* zdpd_process_events.py in Resources */,
+				037611A92BB337F10099B2D2 /* zdpd_process_upgrades.py in Resources */,
+				037611AC2BB337F10099B2D2 /* zdpesd_events.py in Resources */,
+				037611AE2BB337F10099B2D2 /* zdpd_inbound_processes.py in Resources */,
+				037611AA2BB337F10099B2D2 /* zdpd_classification.py in Resources */,
+				037611942BB2CD860099B2D2 /* Preview Assets.xcassets in Resources */,
+				037611912BB2CD860099B2D2 /* Assets.xcassets in Resources */,
+				037611AD2BB337F10099B2D2 /* zdpd_inbound_events.py in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		037611852BB2CD850099B2D2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0376118F2BB2CD850099B2D2 /* LabMainView.swift in Sources */,
+				0368545C2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift in Sources */,
+				0376118D2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift in Sources */,
+				0368545A2BBEB15000C2E095 /* LabESEventTypes.swift in Sources */,
+				0376119E2BB2E4510099B2D2 /* LabAllAuthMetrics.swift in Sources */,
+				0368545E2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift in Sources */,
+				036854632BC3034900C2E095 /* LabAuthChartsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		037611962BB2CD860099B2D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.6;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		037611972BB2CD860099B2D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.6;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		037611992BB2CD860099B2D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = EndpointSecurityLab/EndpointSecurityLab.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"EndpointSecurityLab/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = PCBCQZJ7S7;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Github-Zscaler/Corporate/zdp_endpoint/zep/zep_metrics/inc\"";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		0376119A2BB2CD860099B2D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = EndpointSecurityLab/EndpointSecurityLab.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"EndpointSecurityLab/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = PCBCQZJ7S7;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Github-Zscaler/Corporate/zdp_endpoint/zep/zep_metrics/inc\"";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		037611842BB2CD850099B2D2 /* Build configuration list for PBXProject "EndpointSecurityLab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				037611962BB2CD860099B2D2 /* Debug */,
+				037611972BB2CD860099B2D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		037611982BB2CD860099B2D2 /* Build configuration list for PBXNativeTarget "EndpointSecurityLab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				037611992BB2CD860099B2D2 /* Debug */,
+				0376119A2BB2CD860099B2D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		036854652BC3E03C00C2E095 /* BitCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = BitCollections;
+		};
+		036854672BC3E03C00C2E095 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		036854692BC3E03C00C2E095 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		0368546B2BC3E03C00C2E095 /* HashTreeCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HashTreeCollections;
+		};
+		0368546D2BC3E03C00C2E095 /* HeapModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HeapModule;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 037611812BB2CD850099B2D2 /* Project object */;
+}

@@ -1,0 +1,331 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		039A2C502A1A3E98000B1615 /* metrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 039A2C4E2A1A3E98000B1615 /* metrics.cpp */; };
+		039A2C512A1A3E98000B1615 /* metrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 039A2C4E2A1A3E98000B1615 /* metrics.cpp */; };
+		039A2C522A1A3E98000B1615 /* esmetrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 039A2C4F2A1A3E98000B1615 /* esmetrics.cpp */; };
+		039A2C532A1A3E98000B1615 /* esmetrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 039A2C4F2A1A3E98000B1615 /* esmetrics.cpp */; };
+		03C7784D291BBCA00066D238 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03C7784C291BBCA00066D238 /* main.cpp */; };
+		03E1C1262B5842C000497C89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03E1C1252B5842C000497C89 /* Foundation.framework */; };
+		03FA9D832A23B5E80086FBEC /* zmetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03FA9D802A23B5E80086FBEC /* zmetrics.h */; };
+		03FA9D842A23B5E80086FBEC /* metrics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03FA9D812A23B5E80086FBEC /* metrics.h */; };
+		03FA9D852A23B5E80086FBEC /* esmetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03FA9D822A23B5E80086FBEC /* esmetrics.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		03C77848291BBCA00066D238 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		039A2C4E2A1A3E98000B1615 /* metrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = metrics.cpp; sourceTree = "<group>"; };
+		039A2C4F2A1A3E98000B1615 /* esmetrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = esmetrics.cpp; sourceTree = "<group>"; };
+		03C7781C291AA6BE0066D238 /* libzep_metrics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libzep_metrics.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		03C77830291AABA10066D238 /* libzlog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libzlog.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		03C7784A291BBCA00066D238 /* zep_metrics_gtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zep_metrics_gtest; sourceTree = BUILT_PRODUCTS_DIR; };
+		03C7784C291BBCA00066D238 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		03E1C1252B5842C000497C89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		03FA9D802A23B5E80086FBEC /* zmetrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zmetrics.h; sourceTree = "<group>"; };
+		03FA9D812A23B5E80086FBEC /* metrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = metrics.h; sourceTree = "<group>"; };
+		03FA9D822A23B5E80086FBEC /* esmetrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = esmetrics.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		03C7781A291AA6BE0066D238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03C77847291BBCA00066D238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03E1C1262B5842C000497C89 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		039A2C472A1A3E77000B1615 /* inc */ = {
+			isa = PBXGroup;
+			children = (
+				039A2C482A1A3E77000B1615 /* zep_metrics */,
+			);
+			path = inc;
+			sourceTree = "<group>";
+		};
+		039A2C482A1A3E77000B1615 /* zep_metrics */ = {
+			isa = PBXGroup;
+			children = (
+				03FA9D812A23B5E80086FBEC /* metrics.h */,
+				03FA9D822A23B5E80086FBEC /* esmetrics.h */,
+				03FA9D802A23B5E80086FBEC /* zmetrics.h */,
+			);
+			path = zep_metrics;
+			sourceTree = "<group>";
+		};
+		039A2C4D2A1A3E98000B1615 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				039A2C4E2A1A3E98000B1615 /* metrics.cpp */,
+				039A2C4F2A1A3E98000B1615 /* esmetrics.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		03C77813291AA6BE0066D238 = {
+			isa = PBXGroup;
+			children = (
+				039A2C472A1A3E77000B1615 /* inc */,
+				039A2C4D2A1A3E98000B1615 /* src */,
+				03C7784B291BBCA00066D238 /* zep_metrics_gtest */,
+				03C7781D291AA6BE0066D238 /* Products */,
+				03C7782F291AABA10066D238 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		03C7781D291AA6BE0066D238 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03C7781C291AA6BE0066D238 /* libzep_metrics.a */,
+				03C7784A291BBCA00066D238 /* zep_metrics_gtest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		03C7782F291AABA10066D238 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03E1C1252B5842C000497C89 /* Foundation.framework */,
+				03C77830291AABA10066D238 /* libzlog.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		03C7784B291BBCA00066D238 /* zep_metrics_gtest */ = {
+			isa = PBXGroup;
+			children = (
+				03C7784C291BBCA00066D238 /* main.cpp */,
+			);
+			path = zep_metrics_gtest;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		03C77818291AA6BE0066D238 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03FA9D832A23B5E80086FBEC /* zmetrics.h in Headers */,
+				03FA9D842A23B5E80086FBEC /* metrics.h in Headers */,
+				03FA9D852A23B5E80086FBEC /* esmetrics.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		03C7781B291AA6BE0066D238 /* zep_metrics */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03C77827291AA6BE0066D238 /* Build configuration list for PBXNativeTarget "zep_metrics" */;
+			buildPhases = (
+				03C77818291AA6BE0066D238 /* Headers */,
+				03C77819291AA6BE0066D238 /* Sources */,
+				03C7781A291AA6BE0066D238 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zep_metrics;
+			productName = zdp_metrics;
+			productReference = 03C7781C291AA6BE0066D238 /* libzep_metrics.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		03C77849291BBCA00066D238 /* zep_metrics_gtest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03C7784E291BBCA00066D238 /* Build configuration list for PBXNativeTarget "zep_metrics_gtest" */;
+			buildPhases = (
+				03C77846291BBCA00066D238 /* Sources */,
+				03C77847291BBCA00066D238 /* Frameworks */,
+				03C77848291BBCA00066D238 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zep_metrics_gtest;
+			productName = zdp_metrics_gtest;
+			productReference = 03C7784A291BBCA00066D238 /* zep_metrics_gtest */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		03C77814291AA6BE0066D238 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					03C7781B291AA6BE0066D238 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					03C77849291BBCA00066D238 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 03C77817291AA6BE0066D238 /* Build configuration list for PBXProject "zep_metrics" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 03C77813291AA6BE0066D238;
+			productRefGroup = 03C7781D291AA6BE0066D238 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				03C7781B291AA6BE0066D238 /* zep_metrics */,
+				03C77849291BBCA00066D238 /* zep_metrics_gtest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		03C77819291AA6BE0066D238 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				039A2C522A1A3E98000B1615 /* esmetrics.cpp in Sources */,
+				039A2C502A1A3E98000B1615 /* metrics.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03C77846291BBCA00066D238 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03C7784D291BBCA00066D238 /* main.cpp in Sources */,
+				039A2C532A1A3E98000B1615 /* esmetrics.cpp in Sources */,
+				039A2C512A1A3E98000B1615 /* metrics.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		03C77825291AA6BE0066D238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+			};
+			name = Debug;
+		};
+		03C77826291AA6BE0066D238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+			};
+			name = Release;
+		};
+		03C77828291AA6BE0066D238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				HEADER_SEARCH_PATHS = "${ZEP_METRICS_INC}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		03C77829291AA6BE0066D238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				HEADER_SEARCH_PATHS = "${ZEP_METRICS_INC}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		03C7784F291BBCA00066D238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "${ZEP_METRICS_GTEST_INC}";
+				OTHER_LDFLAGS = "${ZEP_METRICS_GTEST_OTHER_LD_FLAGS}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zscaler.zep-metrics-gtest";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		03C77850291BBCA00066D238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "${ZEP_METRICS_GTEST_INC}";
+				OTHER_LDFLAGS = "${ZEP_METRICS_GTEST_OTHER_LD_FLAGS}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zscaler.zep-metrics-gtest";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		03C77817291AA6BE0066D238 /* Build configuration list for PBXProject "zep_metrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03C77825291AA6BE0066D238 /* Debug */,
+				03C77826291AA6BE0066D238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03C77827291AA6BE0066D238 /* Build configuration list for PBXNativeTarget "zep_metrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03C77828291AA6BE0066D238 /* Debug */,
+				03C77829291AA6BE0066D238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03C7784E291BBCA00066D238 /* Build configuration list for PBXNativeTarget "zep_metrics_gtest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03C7784F291BBCA00066D238 /* Debug */,
+				03C77850291BBCA00066D238 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 03C77814291AA6BE0066D238 /* Project object */;
+}
