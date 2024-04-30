@@ -12,31 +12,6 @@ private enum Constant {
     static let timerLapse : TimeInterval = 2
 }
 
-struct FileOpenThroughputSample : Identifiable {
-    var eventCount : UInt64
-    var sampleIndex : UInt64
-    var id: String
-}
-
-struct FileOpenPerProcessData : Identifiable {
-    var procPath : String
-    var eventCount : UInt64
-    var id: String
-}
-
-enum ChartType: String, CaseIterable {
-    case throughput, processes
-
-    static var description = "type"
-}
-
-class FileOpenViewModel : ObservableObject {
-    
-    @Published var chosenChartType: ChartType = .throughput
-    @Published var throughputData : [FileOpenThroughputSample] = []
-    @Published var perProcessData : [FileOpenPerProcessData] = []
-}
-
 struct LabFileOpenMetricsChartView: View {
     
     private func populateViewDataModel(viewDataModel : FileOpenViewModel) {
@@ -52,7 +27,7 @@ struct LabFileOpenMetricsChartView: View {
     private func populateProcEventsViewDataModel(viewDataModel : FileOpenViewModel) {
         viewDataModel.perProcessData.removeAll()
         for (procPath, eventData) in LabFileOpenMetrics.gFileOpenEventsPerProcDict {
-            viewDataModel.perProcessData.append(FileOpenPerProcessData(procPath: procPath, eventCount: eventData.eventCount, id:""))
+            viewDataModel.perProcessData.append(FileOpenEventsPerProcess(procPath: procPath, eventCount: eventData.eventCount, id:""))
         }
     }
 

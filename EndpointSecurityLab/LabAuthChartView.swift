@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Charts
-import Collections
+//import Collections
 
 private enum Constant {
     static let timerLapse : TimeInterval = 5
@@ -130,25 +130,6 @@ struct AuthMetricsChart: View {
             populateViewDataModel(viewDataModel: authEventsDataModel)
         }
 
-    }
-}
-
-struct AuthAnnotationView: View {
-    let eventName : String
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(eventName)
-                .font(.headline)
-            Divider()
-//            ForEach(products) { product in
-//                let name = product.name
-//                let sales = product.salesData[monthNumber]
-//                Text("\(name): \(sales, format: .currency(code: "NZD"))")
-//            }
-        }
-        .padding()
-        .background(Color(nsColor: .controlBackgroundColor))
     }
 }
 
