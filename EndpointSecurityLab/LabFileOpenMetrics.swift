@@ -11,7 +11,6 @@ import OSLog
 import Collections
 
 
-
 public class LabFileOpenMetrics {
 
     public struct FileOpenEventPerProcData {

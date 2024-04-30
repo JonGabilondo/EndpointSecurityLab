@@ -19,26 +19,11 @@ private enum Constant {
     static let textColorOpacity = 0.7
 }
 
-struct AuthEventMetricsData : Identifiable {
-    var eventType : String
-    var count : UInt64
-    var deadline : UInt64
-    var deadlineCategory : String
-    var deadlineColor : Color
-    var id: String { eventType }
-}
-
-class AuthEventsDataViewModel : ObservableObject {
-    
-    @Published var data : [AuthEventMetricsData] = []
-}
-
-
 struct AuthMetricsChart: View {
 
     private func populateViewDataModel(viewDataModel : AuthEventsDataViewModel) {
         viewDataModel.data.removeAll()
-        for (eventId, eventData) in gEventsRecord {
+        for (eventId, eventData) in gEventsPerTypeRecord {
             viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.min, deadlineCategory:"min", deadlineColor: .pink))
             if (eventData.min != eventData.max) {
                 viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.max, deadlineCategory:"max", deadlineColor: .purple))

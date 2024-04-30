@@ -17,7 +17,8 @@ struct EventData {
     var max: UInt64
 }
 
-var gEventsRecord : OrderedDictionary<UInt32, EventData> = [:]
+typealias EventType = UInt32
+var gEventsPerTypeRecord : OrderedDictionary<EventType, EventData> = [:]
 
 public class LabAllAuthMetrics {
     
@@ -31,7 +32,6 @@ public class LabAllAuthMetrics {
         if !startEndpointSecurityClient() {
             return;
         }
-        
     }
     
     static func stop() {
@@ -53,7 +53,7 @@ public class LabAllAuthMetrics {
         do {
             var csvData = "Event, Count, Deadline-min, Deadline-max\n"
             
-            for event in gEventsRecord {
+            for event in gEventsPerTypeRecord {
                 csvData.append(String(format: "%@, %@, %@, %@\n", ESEventTypes[event.key]!, String(format: "%d", event.value.count), String(format: "%ld", event.value.min), String(format: "%ld", event.value.max)))
             }
             
@@ -89,7 +89,6 @@ public class LabAllAuthMetrics {
         } catch {
             print("error creating csv file", error)
         }
-        
     }
     
     
@@ -128,7 +127,7 @@ public class LabAllAuthMetrics {
         var minDeadline : UInt64 = deadline_delta_secs
         var maxDeadline : UInt64 = deadline_delta_secs
 
-        let eventData = gEventsRecord[message.pointee.event_type.rawValue]
+        let eventData = gEventsPerTypeRecord[message.pointee.event_type.rawValue]
         if eventData != nil {
             count = eventData!.count + 1
             if (deadline_delta_secs > eventData!.max) {
@@ -138,7 +137,7 @@ public class LabAllAuthMetrics {
             }
         }
         
-        gEventsRecord[message.pointee.event_type.rawValue] =  EventData(count:count, min:minDeadline, max:maxDeadline)
+        gEventsPerTypeRecord[message.pointee.event_type.rawValue] =  EventData(count:count, min:minDeadline, max:maxDeadline)
         
         if  eventsCount % 2000 == 0 {
             //print("deadline: ", deadline_delta_secs);

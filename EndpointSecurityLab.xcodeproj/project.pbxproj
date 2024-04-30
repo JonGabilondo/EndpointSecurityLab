@@ -7,10 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0343AABF2BD96BCD00516FE9 /* BitCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 0343AABE2BD96BCD00516FE9 /* BitCollections */; };
+		0343AAC12BD96BCD00516FE9 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 0343AAC02BD96BCD00516FE9 /* Collections */; };
+		0343AAC32BD96BCD00516FE9 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 0343AAC22BD96BCD00516FE9 /* DequeModule */; };
+		0343AAC52BD96BCD00516FE9 /* HashTreeCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 0343AAC42BD96BCD00516FE9 /* HashTreeCollections */; };
+		0343AAC72BD96BCD00516FE9 /* HeapModule in Frameworks */ = {isa = PBXBuildFile; productRef = 0343AAC62BD96BCD00516FE9 /* HeapModule */; };
+		0343ABEE2BE12F4000516FE9 /* LabFileOpenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0343ABED2BE12F4000516FE9 /* LabFileOpenViewModel.swift */; };
+		0343ABF02BE1301500516FE9 /* LabAuthChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0343ABEF2BE1301500516FE9 /* LabAuthChartViewModel.swift */; };
 		0368545A2BBEB15000C2E095 /* LabESEventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036854592BBEB15000C2E095 /* LabESEventTypes.swift */; };
 		0368545C2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */; };
-		0368545E2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */; };
-		036854632BC3034900C2E095 /* LabAuthChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036854622BC3034900C2E095 /* LabAuthChartsView.swift */; };
+		0368545E2BBEF25700C2E095 /* LabFileOpenChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368545D2BBEF25700C2E095 /* LabFileOpenChartView.swift */; };
+		036854632BC3034900C2E095 /* LabAuthChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036854622BC3034900C2E095 /* LabAuthChartView.swift */; };
 		036854662BC3E03C00C2E095 /* BitCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 036854652BC3E03C00C2E095 /* BitCollections */; };
 		036854682BC3E03C00C2E095 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 036854672BC3E03C00C2E095 /* Collections */; };
 		0368546A2BC3E03C00C2E095 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 036854692BC3E03C00C2E095 /* DequeModule */; };
@@ -25,10 +32,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0343ABED2BE12F4000516FE9 /* LabFileOpenViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabFileOpenViewModel.swift; sourceTree = "<group>"; };
+		0343ABEF2BE1301500516FE9 /* LabAuthChartViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabAuthChartViewModel.swift; sourceTree = "<group>"; };
 		036854592BBEB15000C2E095 /* LabESEventTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabESEventTypes.swift; sourceTree = "<group>"; };
 		0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabFileOpenMetrics.swift; sourceTree = "<group>"; };
-		0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabFileOpenMetricsChartView.swift; sourceTree = "<group>"; };
-		036854622BC3034900C2E095 /* LabAuthChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAuthChartsView.swift; sourceTree = "<group>"; };
+		0368545D2BBEF25700C2E095 /* LabFileOpenChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabFileOpenChartView.swift; sourceTree = "<group>"; };
+		036854622BC3034900C2E095 /* LabAuthChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAuthChartView.swift; sourceTree = "<group>"; };
 		037611892BB2CD850099B2D2 /* EndpointSecurityLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EndpointSecurityLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0376118C2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointSecurityLabApp.swift; sourceTree = "<group>"; };
 		0376118E2BB2CD850099B2D2 /* LabMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabMainView.swift; sourceTree = "<group>"; };
@@ -44,11 +53,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0343AAC52BD96BCD00516FE9 /* HashTreeCollections in Frameworks */,
 				0368546C2BC3E03C00C2E095 /* HashTreeCollections in Frameworks */,
 				036854682BC3E03C00C2E095 /* Collections in Frameworks */,
+				0343AAC12BD96BCD00516FE9 /* Collections in Frameworks */,
 				0368546A2BC3E03C00C2E095 /* DequeModule in Frameworks */,
 				036854662BC3E03C00C2E095 /* BitCollections in Frameworks */,
+				0343AAC32BD96BCD00516FE9 /* DequeModule in Frameworks */,
+				0343AABF2BD96BCD00516FE9 /* BitCollections in Frameworks */,
 				0368546E2BC3E03C00C2E095 /* HeapModule in Frameworks */,
+				0343AAC72BD96BCD00516FE9 /* HeapModule in Frameworks */,
 				037611A12BB314960099B2D2 /* libEndpointSecurity.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,6 +70,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0343ABEC2BE12F0A00516FE9 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				0343ABEF2BE1301500516FE9 /* LabAuthChartViewModel.swift */,
+				0343ABED2BE12F4000516FE9 /* LabFileOpenViewModel.swift */,
+			);
+			name = "View Model";
+			sourceTree = "<group>";
+		};
 		0368545F2BBEF26E00C2E095 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -69,8 +92,8 @@
 			isa = PBXGroup;
 			children = (
 				0376118E2BB2CD850099B2D2 /* LabMainView.swift */,
-				036854622BC3034900C2E095 /* LabAuthChartsView.swift */,
-				0368545D2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift */,
+				036854622BC3034900C2E095 /* LabAuthChartView.swift */,
+				0368545D2BBEF25700C2E095 /* LabFileOpenChartView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -100,6 +123,7 @@
 				0376119D2BB2E4510099B2D2 /* LabAllAuthMetrics.swift */,
 				0368545B2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift */,
 				036854A32BC59C1600C2E095 /* View */,
+				0343ABEC2BE12F0A00516FE9 /* View Model */,
 				0368545F2BBEF26E00C2E095 /* Supporting Files */,
 				037611922BB2CD860099B2D2 /* Preview Content */,
 			);
@@ -144,6 +168,11 @@
 				036854692BC3E03C00C2E095 /* DequeModule */,
 				0368546B2BC3E03C00C2E095 /* HashTreeCollections */,
 				0368546D2BC3E03C00C2E095 /* HeapModule */,
+				0343AABE2BD96BCD00516FE9 /* BitCollections */,
+				0343AAC02BD96BCD00516FE9 /* Collections */,
+				0343AAC22BD96BCD00516FE9 /* DequeModule */,
+				0343AAC42BD96BCD00516FE9 /* HashTreeCollections */,
+				0343AAC62BD96BCD00516FE9 /* HeapModule */,
 			);
 			productName = EndpointSecurityLab;
 			productReference = 037611892BB2CD850099B2D2 /* EndpointSecurityLab.app */;
@@ -204,11 +233,13 @@
 			files = (
 				0376118F2BB2CD850099B2D2 /* LabMainView.swift in Sources */,
 				0368545C2BBEDD0D00C2E095 /* LabFileOpenMetrics.swift in Sources */,
+				0343ABEE2BE12F4000516FE9 /* LabFileOpenViewModel.swift in Sources */,
 				0376118D2BB2CD850099B2D2 /* EndpointSecurityLabApp.swift in Sources */,
 				0368545A2BBEB15000C2E095 /* LabESEventTypes.swift in Sources */,
 				0376119E2BB2E4510099B2D2 /* LabAllAuthMetrics.swift in Sources */,
-				0368545E2BBEF25700C2E095 /* LabFileOpenMetricsChartView.swift in Sources */,
-				036854632BC3034900C2E095 /* LabAuthChartsView.swift in Sources */,
+				0343ABF02BE1301500516FE9 /* LabAuthChartViewModel.swift in Sources */,
+				0368545E2BBEF25700C2E095 /* LabFileOpenChartView.swift in Sources */,
+				036854632BC3034900C2E095 /* LabAuthChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +389,6 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 0.2;
-				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
@@ -435,6 +465,31 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0343AABE2BD96BCD00516FE9 /* BitCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = BitCollections;
+		};
+		0343AAC02BD96BCD00516FE9 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		0343AAC22BD96BCD00516FE9 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		0343AAC42BD96BCD00516FE9 /* HashTreeCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HashTreeCollections;
+		};
+		0343AAC62BD96BCD00516FE9 /* HeapModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HeapModule;
+		};
 		036854652BC3E03C00C2E095 /* BitCollections */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 036854642BC3E03C00C2E095 /* XCRemoteSwiftPackageReference "swift-collections" */;
