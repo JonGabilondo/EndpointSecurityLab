@@ -16,8 +16,8 @@ struct LabFileOpenMetricsChartView: View {
     
     private func populateViewDataModel(viewDataModel : FileOpenViewModel) {
         var sampleIndex : UInt64 = UInt64(viewDataModel.throughputData.count)
-        for i in viewDataModel.throughputData.count..<LabFileOpenMetrics.gFileOpenEventsTroughputRecord.count {
-            let sampleCount = LabFileOpenMetrics.gFileOpenEventsTroughputRecord[i]
+        for i in viewDataModel.throughputData.count..<LabFileOpenJob.gFileOpenEventsTroughputRecord.count {
+            let sampleCount = LabFileOpenJob.gFileOpenEventsTroughputRecord[i]
             let event : FileOpenThroughputSample = FileOpenThroughputSample(eventCount: sampleCount, sampleIndex: sampleIndex, id: "")
             viewDataModel.throughputData.append(event)
             sampleIndex += 1
@@ -26,7 +26,7 @@ struct LabFileOpenMetricsChartView: View {
     
     private func populateProcEventsViewDataModel(viewDataModel : FileOpenViewModel) {
         viewDataModel.perProcessData.removeAll()
-        for (procPath, eventData) in LabFileOpenMetrics.gFileOpenEventsPerProcDict {
+        for (procPath, eventData) in LabFileOpenJob.gFileOpenEventsPerProcDict {
             viewDataModel.perProcessData.append(FileOpenEventsPerProcess(procPath: procPath, eventCount: eventData.eventCount, id:""))
         }
     }

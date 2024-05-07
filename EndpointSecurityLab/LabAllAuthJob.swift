@@ -11,16 +11,16 @@ import OSLog
 import Collections
 
 
-struct EventData {
+struct EventTypeStats {
     var count: UInt64
-    var min: UInt64
-    var max: UInt64
+    var minDeadline: UInt64
+    var maxDeadline: UInt64
 }
 
 typealias EventType = UInt32
-var gEventsPerTypeRecord : OrderedDictionary<EventType, EventData> = [:]
+var gEventsPerTypeRecord : OrderedDictionary<EventType, EventTypeStats> = [:]
 
-public class LabAllAuthMetrics {
+public class LabAllAuthJob {
     
     static var esClientPtr: OpaquePointer? = nil
     static var pythonProcess: Process? = nil
@@ -54,7 +54,7 @@ public class LabAllAuthMetrics {
             var csvData = "Event, Count, Deadline-min, Deadline-max\n"
             
             for event in gEventsPerTypeRecord {
-                csvData.append(String(format: "%@, %@, %@, %@\n", ESEventTypes[event.key]!, String(format: "%d", event.value.count), String(format: "%ld", event.value.min), String(format: "%ld", event.value.max)))
+                csvData.append(String(format: "%@, %@, %@, %@\n", ESEventTypes[event.key]!, String(format: "%d", event.value.count), String(format: "%ld", event.value.minDeadline), String(format: "%ld", event.value.maxDeadline)))
             }
             
             let fileManager = FileManager.default
@@ -130,14 +130,14 @@ public class LabAllAuthMetrics {
         let eventData = gEventsPerTypeRecord[message.pointee.event_type.rawValue]
         if eventData != nil {
             count = eventData!.count + 1
-            if (deadline_delta_secs > eventData!.max) {
+            if (deadline_delta_secs > eventData!.maxDeadline) {
                 maxDeadline = deadline_delta_secs
-            } else if (deadline_delta_secs < eventData!.min) {
+            } else if (deadline_delta_secs < eventData!.minDeadline) {
                 minDeadline = deadline_delta_secs
             }
         }
         
-        gEventsPerTypeRecord[message.pointee.event_type.rawValue] =  EventData(count:count, min:minDeadline, max:maxDeadline)
+        gEventsPerTypeRecord[message.pointee.event_type.rawValue] =  EventTypeStats(count:count, minDeadline:minDeadline, maxDeadline:maxDeadline)
         
         if  eventsCount % 2000 == 0 {
             //print("deadline: ", deadline_delta_secs);

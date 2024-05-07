@@ -24,9 +24,9 @@ struct AuthMetricsChart: View {
     private func populateViewDataModel(viewDataModel : AuthEventsDataViewModel) {
         viewDataModel.data.removeAll()
         for (eventId, eventData) in gEventsPerTypeRecord {
-            viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.min, deadlineCategory:"min", deadlineColor: .pink))
-            if (eventData.min != eventData.max) {
-                viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.max, deadlineCategory:"max", deadlineColor: .purple))
+            viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.minDeadline, deadlineCategory:"min", deadlineColor: .pink))
+            if (eventData.minDeadline != eventData.maxDeadline) {
+                viewDataModel.data.append(AuthEventMetricsData(eventType: ESEventTypes[eventId]!, count: eventData.count, deadline: eventData.maxDeadline, deadlineCategory:"max", deadlineColor: .purple))
             }
         }
     }

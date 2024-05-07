@@ -9,41 +9,47 @@ import SwiftUI
 
 func startAuthMetrics() {
     DispatchQueue.global(qos: .userInitiated).async {
-        LabAllAuthMetrics.start()
+        LabAllAuthJob.start()
     }
 }
 
 func stopAuthMetrics() {
     DispatchQueue.global(qos: .userInitiated).async {
-        LabAllAuthMetrics.stop()
+        LabAllAuthJob.stop()
     }
 }
 
 func exportAuthMetricsData() {
     DispatchQueue.global(qos: .userInitiated).async {
-        LabAllAuthMetrics.export()
+        LabAllAuthJob.export()
     }
 }
 
 func startFileOpenMetrics() {
     DispatchQueue.global(qos: .userInitiated).async {
-        LabFileOpenMetrics.start()
+        LabFileOpenJob.start()
     }
 }
 
 func stopFileOpenMetrics() {
     DispatchQueue.global(qos: .userInitiated).async {
-        LabFileOpenMetrics.stop()
+        LabFileOpenJob.stop()
     }
 }
 
 func exportFileOpenData() {
     DispatchQueue.global(qos: .userInitiated).async {
-        LabFileOpenMetrics.export()
+        LabFileOpenJob.export()
     }
 }
 
+func startAncestors() -> Bool {
+    return LabAncestorsJob.sharedInstance.start()
+}
 
+func stopAncestors() -> Bool {
+    return LabAncestorsJob.sharedInstance.stop()
+}
 
 struct LabMainView: View {
     @State var isAuthMetricsRunning: Bool = false
@@ -53,6 +59,10 @@ struct LabMainView: View {
     @State var isFileOpenMetricsRunning: Bool = false
     @State var fileOpenMetricsProgressOpacity: Double = 0.0
     @State var fileOpenMetricsButtonLabel: String = "Start"
+
+    @State var isAncestorsRunning: Bool = false
+    @State var ancestorsProgressOpacity: Double = 0.0
+    @State var ancestorsButtonLabel: String = "Start"
 
     @Environment(\.openWindow) private var openWindow
 
@@ -66,11 +76,12 @@ struct LabMainView: View {
                         if isAuthMetricsRunning {
                             stopAuthMetrics()
                             authMetricsButtonLabel = "Start"
+                            isAuthMetricsRunning.toggle()
                         } else {
                             startAuthMetrics()
                             authMetricsButtonLabel = "Stop"
+                            isAuthMetricsRunning.toggle()
                         }
-                        isAuthMetricsRunning.toggle()
                         authMetricsProgressOpacity = isAuthMetricsRunning ?1.0 :0.0
                     }
                     
@@ -88,6 +99,7 @@ struct LabMainView: View {
                 }
             }
             .padding(.bottom)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             GroupBox(label: Label("Open-File Metrics", systemImage: "hammer").fontWeight(.bold)) {
                 HStack {
@@ -115,10 +127,44 @@ struct LabMainView: View {
                     }
                 }
             }
+            .padding(.bottom)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
+            GroupBox(label: Label("ZDP Antitampering", systemImage: "hammer").fontWeight(.bold)) {
+                HStack {
+                    Button(ancestorsButtonLabel) {
+                        if isAncestorsRunning {
+                            if stopAncestors() {
+                                ancestorsButtonLabel = "Start"
+                                isAncestorsRunning.toggle()
+                            }
+                        } else {
+                            if startAncestors() {
+                                ancestorsButtonLabel = "Stop"
+                                isAncestorsRunning.toggle()
+                            }
+                        }
+                        ancestorsProgressOpacity = isAncestorsRunning ?1.0 :0.0
+                    }
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(0.5)
+                        .disabled(!isAncestorsRunning)
+                        .opacity(ancestorsProgressOpacity)
+//                    Button("Export CSV", systemImage: "tablecells") {
+//                        exportFileOpenData()
+//                    }
+//                    Button("Live Data", systemImage: "chart.xyaxis.line") {
+//                        openWindow(id: "file-open-live-data")
+//                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
         }
         .padding()
         .focusable(false)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
 }

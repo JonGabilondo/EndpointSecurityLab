@@ -12,8 +12,8 @@ import SwiftUI
 @main
 struct EndpointSecurityLabApp: App {
     
-    let name : String = "com.zscaler.zdp.EndpointSecurityLab" + ".sudo"
-    var myItems : [AuthorizationItem] = []
+    //let name : String = "com.zscaler.zdp.EndpointSecurityLab" + ".sudo"
+    //var myItems : [AuthorizationItem] = []
     
     init() {
     }
@@ -22,8 +22,8 @@ struct EndpointSecurityLabApp: App {
         Window("Endpoint Security Lab", id: "main") {
             LabMainView()
                 .frame(
-                    minWidth: 400, maxWidth: 400,
-                    minHeight: 200, maxHeight: 200)
+                    minWidth: 350, maxWidth: 350,
+                    minHeight: 260, maxHeight: 260)
         }
         .windowResizability(.contentSize)
         
