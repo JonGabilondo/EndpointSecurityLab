@@ -11,7 +11,7 @@ import OSLog
 import Collections
 
 
-public class LabFileOpenMetrics {
+public class LabFileOpenJob {
 
     public struct FileOpenEventPerProcData {
         var eventCount: UInt64
@@ -170,15 +170,6 @@ public class LabFileOpenMetrics {
 //            periodStartNanos = (periodStartTics * UInt64(clockTimebase.numer)) / UInt64(clockTimebase.denom)
        }
         
-        
-//        if  (totalEventsCount % 100 == 0) {
-//            //print("deadline: ", deadline_delta_secs);
-//            //os_log("event_type:\(message.pointee.event_type.rawValue) duration:\(deadline_delta_secs)")
-//            //DispatchQueue.global().async {
-//                //print("event type: \(message.pointee.event_type)")
-//            os_log("events in record: %d", gFileOpenEventsTroughputRecord.count)
-//            //}
-//        }
     }
 
     
