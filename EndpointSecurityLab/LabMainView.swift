@@ -43,12 +43,20 @@ func exportFileOpenData() {
     }
 }
 
-func startAncestors() -> Bool {
-    return LabAncestorsJob.sharedInstance.start()
+func startEventAnalisys() -> Bool {
+    return LabEventAnalisysJob.sharedInstance.start()
 }
 
-func stopAncestors() -> Bool {
-    return LabAncestorsJob.sharedInstance.stop()
+func stopEventAnalisys() -> Bool {
+    return LabEventAnalisysJob.sharedInstance.stop()
+}
+
+func startAntitamperingJob() -> Bool {
+    return LabAntitamperingJob.sharedInstance.start()
+}
+
+func stopAntitampering() -> Bool {
+    return LabAntitamperingJob.sharedInstance.stop()
 }
 
 struct LabMainView: View {
@@ -60,9 +68,13 @@ struct LabMainView: View {
     @State var fileOpenMetricsProgressOpacity: Double = 0.0
     @State var fileOpenMetricsButtonLabel: String = "Start"
 
-    @State var isAncestorsRunning: Bool = false
-    @State var ancestorsProgressOpacity: Double = 0.0
-    @State var ancestorsButtonLabel: String = "Start"
+    @State var isEventAnalisysRunning: Bool = false
+    @State var eventAnalisysProgressOpacity: Double = 0.0
+    @State var eventAnalisysButtonLabel: String = "Start"
+
+    @State var isAntitamperingRunning: Bool = false
+    @State var antitamperingProgressOpacity: Double = 0.0
+    @State var antitamperingButtonLabel: String = "Start"
 
     @Environment(\.openWindow) private var openWindow
 
@@ -98,7 +110,7 @@ struct LabMainView: View {
                     }
                 }
             }
-            .padding(.bottom)
+//            .padding(.bottom)
             .frame(maxWidth: .infinity, alignment: .leading)
 
             GroupBox(label: Label("Open-File Metrics", systemImage: "hammer").fontWeight(.bold)) {
@@ -127,36 +139,55 @@ struct LabMainView: View {
                     }
                 }
             }
-            .padding(.bottom)
+//            .padding(.bottom)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            GroupBox(label: Label("ZDP Antitampering", systemImage: "hammer").fontWeight(.bold)) {
+            GroupBox(label: Label("Event Analisys", systemImage: "hammer").fontWeight(.bold)) {
                 HStack {
-                    Button(ancestorsButtonLabel) {
-                        if isAncestorsRunning {
-                            if stopAncestors() {
-                                ancestorsButtonLabel = "Start"
-                                isAncestorsRunning.toggle()
+                    Button(eventAnalisysButtonLabel) {
+                        if isEventAnalisysRunning {
+                            if stopEventAnalisys() {
+                                eventAnalisysButtonLabel = "Start"
+                                isEventAnalisysRunning.toggle()
                             }
                         } else {
-                            if startAncestors() {
-                                ancestorsButtonLabel = "Stop"
-                                isAncestorsRunning.toggle()
+                            if startEventAnalisys() {
+                                eventAnalisysButtonLabel = "Stop"
+                                isEventAnalisysRunning.toggle()
                             }
                         }
-                        ancestorsProgressOpacity = isAncestorsRunning ?1.0 :0.0
+                        eventAnalisysProgressOpacity = isEventAnalisysRunning ?1.0 :0.0
                     }
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
                         .scaleEffect(0.5)
-                        .disabled(!isAncestorsRunning)
-                        .opacity(ancestorsProgressOpacity)
-//                    Button("Export CSV", systemImage: "tablecells") {
-//                        exportFileOpenData()
-//                    }
-//                    Button("Live Data", systemImage: "chart.xyaxis.line") {
-//                        openWindow(id: "file-open-live-data")
-//                    }
+                        .disabled(!isEventAnalisysRunning)
+                        .opacity(eventAnalisysProgressOpacity)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            GroupBox(label: Label("ZDP Antitampering", systemImage: "hammer").fontWeight(.bold)) {
+                HStack {
+                    Button(antitamperingButtonLabel) {
+                        if isAntitamperingRunning {
+                            if stopAntitampering() {
+                                antitamperingButtonLabel = "Start"
+                                isAntitamperingRunning.toggle()
+                            }
+                        } else {
+                            if startAntitamperingJob() {
+                                antitamperingButtonLabel = "Stop"
+                                isAntitamperingRunning.toggle()
+                            }
+                        }
+                        antitamperingProgressOpacity = isAntitamperingRunning ?1.0 :0.0
+                    }
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(0.5)
+                        .disabled(!isAntitamperingRunning)
+                        .opacity(antitamperingProgressOpacity)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

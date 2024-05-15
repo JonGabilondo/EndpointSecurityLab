@@ -10,11 +10,11 @@ import EndpointSecurity
 import OSLog
 import System
 
-class LabAncestorsJob : LabESClientListenerProtocol {
+class LabAntitamperingJob : LabESClientListenerProtocol {
     
     var subcribeEvents: [es_event_type_t] = []
     var labEsClient : LabESClient? = nil
-    static let sharedInstance = LabAncestorsJob()
+    static let sharedInstance = LabAntitamperingJob()
 //    var installerProcess : es_process_t? = nil
     
     init() {
@@ -22,15 +22,12 @@ class LabAncestorsJob : LabESClientListenerProtocol {
             ES_EVENT_TYPE_AUTH_EXEC,
             ES_EVENT_TYPE_AUTH_OPEN,
             ES_EVENT_TYPE_AUTH_CLONE ,
+            ES_EVENT_TYPE_AUTH_CLONE ,
             ES_EVENT_TYPE_AUTH_CREATE,
             ES_EVENT_TYPE_AUTH_RENAME,
             ES_EVENT_TYPE_AUTH_UNLINK,
+            ES_EVENT_TYPE_AUTH_SIGNAL,
             ES_EVENT_TYPE_AUTH_EXCHANGEDATA
-//            ES_EVENT_TYPE_NOTIFY_FORK, 
-//            ES_EVENT_TYPE_NOTIFY_EXEC,
-//            ES_EVENT_TYPE_NOTIFY_UNLINK, 
-//            ES_EVENT_TYPE_NOTIFY_CREATE,
-//            ES_EVENT_TYPE_NOTIFY_OPEN
         ]
         self.labEsClient = LabESClient(listener: self, name: "Ancestors")
     }
@@ -53,57 +50,7 @@ class LabAncestorsJob : LabESClientListenerProtocol {
     
     func handleNotify(message : UnsafePointer<es_message_t>) -> Void {
         
-        var process = message.pointee.process
-        var parentProcessPath = ""
-        if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_FORK) {
-            parentProcessPath = String(cString: UnsafePointer(process.pointee.executable.pointee.path.data))
-            process = message.pointee.event.fork.child
-        }
         
-        var args = ""
-        if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_EXEC) {
-            args = collectExecArgs(message: message)
-            parentProcessPath = String(cString: UnsafePointer(process.pointee.executable.pointee.path.data))
-            process = message.pointee.event.exec.target
-        }
-        
-        let procPathString = String(cString: UnsafePointer(process.pointee.executable.pointee.path.data))
-        let pid = audit_token_to_pid(process.pointee.audit_token)
-        let rpid = audit_token_to_pid(process.pointee.responsible_audit_token)
-        let ppid = process.pointee.ppid
-        let oppid = process.pointee.original_ppid
-
-        var filePath = ""
-        switch message.pointee.event_type {
-        case ES_EVENT_TYPE_NOTIFY_CREATE:
-            if message.pointee.event.create.destination_type == ES_DESTINATION_TYPE_EXISTING_FILE {
-                filePath = String(cString: UnsafePointer(message.pointee.event.create.destination.existing_file.pointee.path.data))
-            } else {
-                filePath = String(cString: UnsafePointer(message.pointee.event.create.destination.new_path.filename.data))
-            }
-            break
-        case ES_EVENT_TYPE_NOTIFY_OPEN:
-            filePath = String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data))
-            break
-        case ES_EVENT_TYPE_NOTIFY_UNLINK:
-            filePath = String(cString: UnsafePointer(message.pointee.event.unlink.target.pointee.path.data))
-            break
-        default:
-            break
-        }
-            
-        var ppath = ""
-        if ppid != 1 {
-            ppath = getProcessPath(pid: ppid)
-        }
-
-        var rpath = ""
-        if rpid == ppid {
-            rpath = ppath
-        } else {
-            rpath = getProcessPath(pid: rpid)
-        }
-        os_log("EVENT:%{public}s  proc_path:'%{public}s' parent_proc_path:'%{public}s' pid:%d rpid:%d rpath:'%{public}s' ppid:%d ppath:'%{public}s' oppid:%d args:'%{public}s' file:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, procPathString, parentProcessPath, pid, rpid, rpath, ppid, ppath, oppid, args, filePath)
     }
     
     func handleAuth(message : UnsafePointer<es_message_t>) -> Void {
@@ -175,6 +122,7 @@ class LabAncestorsJob : LabESClientListenerProtocol {
                         
             es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
             break
+            
         case ES_EVENT_TYPE_AUTH_CLONE:
             filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.clone.source.pointee.path.data)))
             if isFileOperationInZDPDeployment(filePath: filePath) && !isResponsibleProcessTrusted(process: message.pointee.process) {
@@ -265,6 +213,26 @@ class LabAncestorsJob : LabESClientListenerProtocol {
             }
             es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
             break
+        case ES_EVENT_TYPE_AUTH_SIGNAL:
+            let sendingProcess = message.pointee.process
+            let targetProcess = message.pointee.event.signal.target
+            
+            var authResult = ES_AUTH_RESULT_ALLOW
+            if (isZscalerProcess(process: targetProcess)) {
+                if isZscalerProcess(process: sendingProcess) {
+                    // allow
+                } else if isLaunchdProcess(process: sendingProcess) && sendingProcess.pointee.ppid == 0 {
+                    // allow
+                } else if isAppleProcess(process: sendingProcess) && sendingProcess.pointee.ppid == 1 && audit_token_to_pid(sendingProcess.pointee.audit_token) == audit_token_to_pid(sendingProcess.pointee.responsible_audit_token) { // spinlock like
+                    // allow
+                } else {
+                    os_log("EVENT:%{public}s DENIED sig:%d from:%{public}s to:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, message.pointee.event.signal.sig, String(cString: UnsafePointer(sendingProcess.pointee.signing_id.data)), String(cString: UnsafePointer(targetProcess.pointee.signing_id.data)))
+                    authResult = ES_AUTH_RESULT_DENY
+                }
+            }
+            es_respond_auth_result((labEsClient?.esClientPtr)!, message, authResult, false)
+
+            break;
         default:
             es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
         }
@@ -307,7 +275,7 @@ class LabAncestorsJob : LabESClientListenerProtocol {
     
     private func isAppleProcess(process: UnsafePointer<es_process_t>) -> Bool {
 
-        return process.pointee.is_platform_binary
+        return process.pointee.is_platform_binary || String(cString: process.pointee.signing_id.data).starts(with: "com.apple.")
     }
     
     private func isLaunchdProcess(process: UnsafePointer<es_process_t>) -> Bool {
