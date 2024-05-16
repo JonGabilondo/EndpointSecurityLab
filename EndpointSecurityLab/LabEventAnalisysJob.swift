@@ -77,7 +77,7 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             // on zccc dlp disable
             // EVENT:NOTIFY_SIGNAL Proc[pid:1 path:/sbin/launchd] Parent[pid:0 ppath:] Resp[pid:1 rpath:/sbin/launchd] TARGET[Proc[pid:33520 path:/Library/Application Support/Zscaler/ZDP/bin/zdpagent.app/Contents/MacOS/zdpagent] Parent[pid:1 ppath:] Resp[pid:33520 rpath:]]
             
-            var process = message.pointee.process
+            let process = message.pointee.process
             let str1 = getProcessTree(process: process)
             let str2 = getProcessTree(process: message.pointee.event.signal.target)
             os_log("EVENT:%{public}s %d %{public}s TARGET[%{public}s]", ESEventTypes[message.pointee.event_type.rawValue]!, message.pointee.event.signal.sig, str1, str2)
@@ -104,7 +104,10 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             break
         case ES_EVENT_TYPE_NOTIFY_UNLINK:
             filePath = String(cString: UnsafePointer(message.pointee.event.unlink.target.pointee.path.data))
-            break
+            let process = message.pointee.process
+            let str1 = getProcessTree(process: process)
+            os_log("EVENT:%{public}s %{public}s file:%{public}s]", ESEventTypes[message.pointee.event_type.rawValue]!, str1, filePath)
+            return
         default:
             break
         }
@@ -129,138 +132,12 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
     }
     
     // MARK: Private
-    
-    private func getProcessTree(process: UnsafePointer<es_process_t>) -> String {
-        let procPath = String(cString: UnsafePointer(process.pointee.executable.pointee.path.data))
-        let pid = audit_token_to_pid(process.pointee.audit_token)
-        let ppid = process.pointee.ppid
-        let oppid = process.pointee.original_ppid
-        let rpid = audit_token_to_pid(process.pointee.responsible_audit_token)
-        let pb = process.pointee.is_platform_binary
         
-        var ppath = ""
-        if ppid != 1 {
-            ppath = getProcessPath(pid: ppid)
-        }
 
-        var rpath = ""
-        if rpid == ppid {
-            rpath = ppath
-        } else {
-            rpath = getProcessPath(pid: rpid)
-        }
-
-        return String(format: "Proc[pid:\(pid) path:\(procPath)] Parent[pid:\(ppid) ppath:\(ppath) pb:\(pb)] Resp[pid:\(rpid) rpath:\(rpath)]", arguments: [])
-    }
-    
-    private func collectExecArgs(message: UnsafePointer<es_message_t>) -> String
-    {
-        var argc : UInt32 = 0
-        withUnsafePointer(to: message.pointee.event.exec) { pointer in
-            argc = es_exec_arg_count(pointer)
-        }
-         
-        var argv : [String] = []
-        for i in 0..<argc { //argv[0] - process name
-           
-            var param : es_string_token_t = es_string_token_t()
-            withUnsafePointer(to: message.pointee.event.exec) { pointer in
-                param = es_exec_arg(pointer, i)
-            }
-            let arg : String = String(cString: UnsafePointer(param.data))
-            argv.append(arg)
-        }
-        
-        var cmd = ""
-        if (argc >= 1)
-        {
-            argv.forEach { arg in
-                cmd.append(arg)
-                cmd.append(" ")
-            }
-        }
-
-        return cmd;
-    }
     
     private func isFileOperationInZDPDeployment(filePath: FilePath) -> Bool {
         return filePath.starts(with: "/Library/Application Support/Zscaler/")
     }
-    
-    private func isAppleProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        return process.pointee.is_platform_binary
-    }
-    
-    private func isLaunchdProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        return audit_token_to_pid(process.pointee.audit_token) == 1
-    }
-
-    private func isZscalerProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        if  process.pointee.team_id.data != nil && String( cString: process.pointee.team_id.data) == "PCBCQZJ7S7" {
-            return true
-        }
         
-        if String( cString: process.pointee.executable.pointee.path.data).starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-            
-        return false
-    }
-    
-    private func isZscalerResponsibleProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        let responsiblePath = getProcessPath(pid: audit_token_to_pid(process.pointee.responsible_audit_token))
-        
-        if responsiblePath.starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-
-        if responsiblePath.starts(with: "/Applications/Zscaler/") { // quick hack
-            return true
-        }
-
-        return false
-    }
-    
-    private func isProcessTrusted(process: UnsafePointer<es_process_t>) -> Bool {
-
-        if process.pointee.is_platform_binary {
-            return true
-        }
-        
-        if  process.pointee.team_id.data != nil && String( cString: process.pointee.team_id.data) == "PCBCQZJ7S7" { 
-            return true
-        }
-        
-        if  process.pointee.signing_id.data != nil && String( cString: process.pointee.signing_id.data).starts(with: "com.apple.") { // quick hack
-            return true
-        }
-
-        if String( cString: process.pointee.executable.pointee.path.data).starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-            
-        return false
-    }
-    
-    func getProcessPath(pid : pid_t) -> String {
-        
-        let pathBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(MAXPATHLEN))
-        defer {
-                pathBuffer.deallocate()
-            }
-        
-        var procPath = ""
-        let pathLength = proc_pidpath(pid, pathBuffer, UInt32(MAXPATHLEN))
-        if pathLength > 0 {
-            procPath = String(cString: pathBuffer)
-        }
-        
-        return procPath
-    }
-    
     
 }

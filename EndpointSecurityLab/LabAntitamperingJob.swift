@@ -84,7 +84,10 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
                 os_log("EVENT:%{public}s args:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, args)
                 
                 if args.contains("com.zscaler.zdp.agent") || args.contains("com.zscaler.zdp.pd") || args.contains("com.zscaler.zdp.esd") {
-                    os_log("EVENT:%{public}s DENIED args:'%{public}s' signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, args, String(cString: UnsafePointer(targetProc.pointee.signing_id.data)))
+                    let procs1 = getProcessTree(process: message.pointee.process)
+                    let procs2 = getProcessTree(process: message.pointee.event.exec.target)
+
+                    os_log("EVENT:%{public}s DENIED args:'%{public}s' %{public}s TARGET[%{public}s]", ESEventTypes[message.pointee.event_type.rawValue]!, args, procs1, procs2)
                     es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_DENY, false)
                     return
                 }
@@ -138,25 +141,47 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
             }
             es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
             break
-        case ES_EVENT_TYPE_AUTH_OPEN:
+        case ES_EVENT_TYPE_AUTH_OPEN: do {
             // There are so many processes that open our files : com.apple.mdworker_shared, com.apple.sharedfilelistd, com.apple.CodeSigningHelper, com.apple.mds, com.apple.endpointsecurityd, pid=1 ...
             // We have to let pid=1 to open the file, "com.apple.xpc.proxy" as well, the icons daemons too !
             // How about allowing all opens ?
-            filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data)))
-            // launchd pid 1 is opening out daemons plists, we have to allow it
-            if  !(isAppleProcess(process: message.pointee.process) && (message.pointee.process.pointee.ppid == 1)) &&  // we think that processes from apple that have ppid == 1 are processes that can open our files
-                !isLaunchdProcess(process: message.pointee.process) &&
-                isFileOperationInZDPDeployment(filePath: filePath) &&
-                isResponsibleProcessTrusted(process: message.pointee.process) == false &&
-                String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)) != "com.apple.endpointsecurityd" &&
-                String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)) != "com.apple.xpc.proxy"
-            {
-                os_log("EVENT:%{public}s DENIED pid:%d ppid:%d rpid:%d file:'%{public}s' signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, audit_token_to_pid(message.pointee.process.pointee.audit_token), audit_token_to_pid(message.pointee.process.pointee.parent_audit_token),  audit_token_to_pid(message.pointee.process.pointee.responsible_audit_token), filePath.string, String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)))
-                es_respond_flags_result((labEsClient?.esClientPtr)!, message, 0, false)
-            } else {
-                es_respond_flags_result((labEsClient?.esClientPtr)!, message, UINT32_MAX, false)
+            /*
+             filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data)))
+             // launchd pid 1 is opening out daemons plists, we have to allow it
+             if  !(isAppleProcess(process: message.pointee.process) && (message.pointee.process.pointee.ppid == 1)) &&  // we think that processes from apple that have ppid == 1 are processes that can open our files
+             !isLaunchdProcess(process: message.pointee.process) &&
+             isFileOperationInZDPDeployment(filePath: filePath) &&
+             isResponsibleProcessTrusted(process: message.pointee.process) == false &&
+             String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)) != "com.apple.endpointsecurityd" &&
+             String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)) != "com.apple.xpc.proxy"
+             {
+             os_log("EVENT:%{public}s DENIED pid:%d ppid:%d rpid:%d file:'%{public}s' signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, audit_token_to_pid(message.pointee.process.pointee.audit_token), audit_token_to_pid(message.pointee.process.pointee.parent_audit_token),  audit_token_to_pid(message.pointee.process.pointee.responsible_audit_token), filePath.string, String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)))
+             es_respond_flags_result((labEsClient?.esClientPtr)!, message, 0, false)
+             } else {
+             es_respond_flags_result((labEsClient?.esClientPtr)!, message, UINT32_MAX, false)
+             }
+             */
+            
+            
+            // make it simpler allow all read-only modes
+            // allow modify open only to trusted apps
+            if (hasFileModificationFlags(fflag: message.pointee.event.open.fflag)) {
+
+                filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data)))
+                if isFileOperationInZDPDeployment(filePath: filePath) && isResponsibleProcessTrusted(process: message.pointee.process) == false {
+                    
+                    // we have to let certain open for modification like file:'/Library/Application Support/Zscaler/Logs/com.zscaler.UPMServiceController_stdout.log' signing_id:com.apple.xpc.proxy
+                    if String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)) != "com.apple.xpc.proxy" {
+                        
+                        os_log("EVENT:%{public}s DENIED pid:%d ppid:%d rpid:%d file:'%{public}s' signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, audit_token_to_pid(message.pointee.process.pointee.audit_token), audit_token_to_pid(message.pointee.process.pointee.parent_audit_token),  audit_token_to_pid(message.pointee.process.pointee.responsible_audit_token), filePath.string, String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)))
+                        es_respond_flags_result((labEsClient?.esClientPtr)!, message, 0, false)
+                    }
+                    break
+                }
             }
+            es_respond_flags_result((labEsClient?.esClientPtr)!, message, UINT32_MAX, false)
             break
+        }
         case ES_EVENT_TYPE_AUTH_CREATE:
             if message.pointee.event.create.destination_type == ES_DESTINATION_TYPE_EXISTING_FILE {
                 filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.create.destination.existing_file.pointee.path.data)))
@@ -173,7 +198,8 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
         case ES_EVENT_TYPE_AUTH_UNLINK:
             filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.unlink.target.pointee.path.data)))
             if isFileOperationInZDPDeployment(filePath: filePath) && !isResponsibleProcessTrusted(process: message.pointee.process) {
-                os_log("EVENT:%{public}s DENIED signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, String(cString: UnsafePointer(message.pointee.process.pointee.signing_id.data)))
+                let procs = getProcessTree(process: message.pointee.process)
+                os_log("EVENT:%{public}s DENIED %{public}s file:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, procs, filePath.string)
                 es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_DENY, false)
             } else {
                 es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
@@ -239,230 +265,17 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
     }
     
     // MARK: Private
-    private func collectExecArgs(message: UnsafePointer<es_message_t>) -> String
-    {
-        var argc : UInt32 = 0
-        withUnsafePointer(to: message.pointee.event.exec) { pointer in
-            argc = es_exec_arg_count(pointer)
-        }
-         
-        var argv : [String] = []
-        for i in 0..<argc { //argv[0] - process name
-           
-            var param : es_string_token_t = es_string_token_t()
-            withUnsafePointer(to: message.pointee.event.exec) { pointer in
-                param = es_exec_arg(pointer, i)
-            }
-            let arg : String = String(cString: UnsafePointer(param.data))
-            argv.append(arg)
-        }
-        
-        var cmd = ""
-        if (argc >= 1)
-        {
-            argv.forEach { arg in
-                cmd.append(arg)
-                cmd.append(" ")
-            }
-        }
 
-        return cmd;
-    }
     
     private func isFileOperationInZDPDeployment(filePath: FilePath) -> Bool {
         return filePath.starts(with: "/Library/Application Support/Zscaler/")
     }
+
     
-    private func isAppleProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        return process.pointee.is_platform_binary || String(cString: process.pointee.signing_id.data).starts(with: "com.apple.")
-    }
-    
-    private func isLaunchdProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        return audit_token_to_pid(process.pointee.audit_token) == 1
-    }
-
-
-    private func isZscalerProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        if  process.pointee.team_id.data != nil && String( cString: process.pointee.team_id.data) == "PCBCQZJ7S7" {
-            return true
-        }
-        
-        if String( cString: process.pointee.executable.pointee.path.data).starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-            
-        return false
-    }
-    
-    private func isZscalerResponsibleProcess(process: UnsafePointer<es_process_t>) -> Bool {
-
-        let responsiblePath = getProcessPath(pid: audit_token_to_pid(process.pointee.responsible_audit_token))
-        
-        if responsiblePath.starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-
-        if responsiblePath.starts(with: "/Applications/Zscaler/") { // quick hack
-            return true
-        }
-
-        return false
-    }
-    
-    private func isProcessTrusted(process: UnsafePointer<es_process_t>) -> Bool {
-
-        if process.pointee.is_platform_binary {
-            return true
-        }
-        
-        if  process.pointee.team_id.data != nil && String( cString: process.pointee.team_id.data) == "PCBCQZJ7S7" { 
-            return true
-        }
-        
-        if  process.pointee.signing_id.data != nil && String( cString: process.pointee.signing_id.data).starts(with: "com.apple.") { // quick hack
-            return true
-        }
-
-        if String( cString: process.pointee.executable.pointee.path.data).starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-            
-        return false
-    }
-    
-    private func isResponsibleProcessTrusted(process: UnsafePointer<es_process_t>) -> Bool {
-
-        // the responsible must be a Zscaler
-        
-//        let rpid = audit_token_to_pid(process.pointee.responsible_audit_token)
-        
-        let responsiblePath = getProcessPath(pid: audit_token_to_pid(process.pointee.responsible_audit_token))
-        
-        if responsiblePath.starts(with: "/Library/Application Support/Zscaler/") { // quick hack
-            return true
-        }
-
-        if responsiblePath.starts(with: "/Applications/Zscaler/") { // quick hack
-            return true
-        }
-        
-        // ugly hacks !
-        if responsiblePath.contains("/Finder.app/") { // ugly quick hack
-            return true
-        }
-        
-        if responsiblePath.contains("/Terminal.app/") { // ugly quick hack
-            return true
-        }
-
-        return false
-        
-//        if !isAlive(targetPID: rpid) {
-//            os_log("PROCESS NOT ALIVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-//            return false
-//        }
-        
-//        return false
-        
-//        if installerProcess != nil {
-//            if rpid == audit_token_to_pid(installerProcess!.audit_token) {
-//                os_log("INSTALLER FILE OPERATION DETECTED !")
-//                return true
-//            }
-//        }
-                        
-//        if responsibleApp == nil {
-//            return false
-//        }
-//       
-//        if responsibleApp!.bundleIdentifier!.starts(with: "com.apple.finder") {
-//            return true // it helps to have problems in the finder
-//        }
-//
-//        if responsibleApp!.bundleIdentifier!.starts(with: "com.apple.Terminal") {
-//            return true // Terminal will be the only process from where the installer will be allowed to run
-//        }
-//
-//        let rpath = responsibleApp!.executableURL?.absoluteString ?? ""
-//        return rpath.starts(with: "/Library/Application Support/Zscaler/") || rpath.starts(with: "/Applications/Zscaler/")
-    }
-    
-    private func isAlive(targetPID :pid_t) -> Bool
+    func hasFileModificationFlags( fflag : Int32) -> Bool
     {
-        //flag
-        var isAlive = true
-        
-        //reset errno
-        errno = 0
-        
-        //'management info base' array
-        var mib : [Int32] = [0,0,0,0]
-        
-        //kinfo proc
-        var procInfo = kinfo_proc()
-        
-        //try 'kill' with 0
-        // ->no harm done, but will fail with 'ESRCH' if process is dead
-        kill(targetPID, 0);
-        
-        //dead proc -> 'ESRCH'
-        // ->'No such process'
-        if(ESRCH == errno)
-        {
-            return false
-        }
-        
-        //size
-//        var sizes : size_t  = 0
-        
-        //init mib
-        mib[0] = CTL_KERN;
-        mib[1] = KERN_PROC;
-        mib[2] = KERN_PROC_PID;
-        mib[3] = targetPID;
-        
-        //init size
-//        size = size(ofValue: procInfo)
-
-        let sizeOfMib = MemoryLayout.size(ofValue: mib)
-        let sizeOfMib2 = MemoryLayout.size(ofValue: mib)
-        
-        //get task's flags
-        // ->allows to check for zombies
-//        public func sysctl(_: UnsafeMutablePointer<Int32>!, _: u_int, _: UnsafeMutableRawPointer!, _: UnsafeMutablePointer<Int>!, _: UnsafeMutableRawPointer!, _: Int) -> Int32
-
-        var size : Int = 0
-        if(0 == sysctl(&mib, u_int(sizeOfMib/sizeOfMib2), &procInfo, &size, nil, 0))
-        {
-            //check for zombies
-            if(( Int32(procInfo.kp_proc.p_stat) & SZOMB) == SZOMB)
-            {
-                isAlive = false
-                return false
-            }
-        }
-        
-        return isAlive;
-    }
-    
-    func getProcessPath(pid : pid_t) -> String {
-        
-        let pathBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(MAXPATHLEN))
-        defer {
-                pathBuffer.deallocate()
-            }
-        
-        var procPath = ""
-        let pathLength = proc_pidpath(pid, pathBuffer, UInt32(MAXPATHLEN))
-        if pathLength > 0 {
-            procPath = String(cString: pathBuffer)
-        }
-        
-        return procPath
-        
+        let flags = FWRITE|O_APPEND|O_EXLOCK|O_SHLOCK|O_CREAT|O_TRUNC;
+        return ((fflag & flags) != 0);
     }
     
     

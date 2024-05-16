@@ -29,6 +29,7 @@
 		037611942BB2CD860099B2D2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 037611932BB2CD860099B2D2 /* Preview Assets.xcassets */; };
 		0376119E2BB2E4510099B2D2 /* LabAllAuthJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376119D2BB2E4510099B2D2 /* LabAllAuthJob.swift */; };
 		037611A12BB314960099B2D2 /* libEndpointSecurity.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */; };
+		037ACE992BF509220053AC9F /* LabProcUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037ACE982BF509220053AC9F /* LabProcUtils.swift */; };
 		03C1ABFA2BE39BE30099DA63 /* LabAntitamperingJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C1ABF92BE39BE30099DA63 /* LabAntitamperingJob.swift */; };
 		03C1ABFC2BE39DEC0099DA63 /* LabESClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C1ABFB2BE39DEC0099DA63 /* LabESClient.swift */; };
 		03C1ABFE2BE3A0BF0099DA63 /* LabESClientListenerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C1ABFD2BE3A0BF0099DA63 /* LabESClientListenerProtocol.swift */; };
@@ -51,6 +52,7 @@
 		037611952BB2CD860099B2D2 /* EndpointSecurityLab.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EndpointSecurityLab.entitlements; sourceTree = "<group>"; };
 		0376119D2BB2E4510099B2D2 /* LabAllAuthJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAllAuthJob.swift; sourceTree = "<group>"; };
 		037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libEndpointSecurity.tbd; path = usr/lib/libEndpointSecurity.tbd; sourceTree = SDKROOT; };
+		037ACE982BF509220053AC9F /* LabProcUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabProcUtils.swift; sourceTree = "<group>"; };
 		03C1ABF92BE39BE30099DA63 /* LabAntitamperingJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabAntitamperingJob.swift; sourceTree = "<group>"; };
 		03C1ABFB2BE39DEC0099DA63 /* LabESClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabESClient.swift; sourceTree = "<group>"; };
 		03C1ABFD2BE3A0BF0099DA63 /* LabESClientListenerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabESClientListenerProtocol.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				03C1ABFD2BE3A0BF0099DA63 /* LabESClientListenerProtocol.swift */,
 				03C1AC002BE3A6BA0099DA63 /* Model */,
 				03C1ABFF2BE3A6410099DA63 /* Jobs */,
+				037ACE972BF508F60053AC9F /* Utils */,
 				036854A32BC59C1600C2E095 /* View */,
 				0343ABEC2BE12F0A00516FE9 /* View Model */,
 				0368545F2BBEF26E00C2E095 /* Supporting Files */,
@@ -157,6 +160,14 @@
 				037611A02BB3146C0099B2D2 /* libEndpointSecurity.tbd */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		037ACE972BF508F60053AC9F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				037ACE982BF509220053AC9F /* LabProcUtils.swift */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		03C1ABFF2BE3A6410099DA63 /* Jobs */ = {
@@ -274,6 +285,7 @@
 				0376119E2BB2E4510099B2D2 /* LabAllAuthJob.swift in Sources */,
 				0343ABF02BE1301500516FE9 /* LabAuthChartViewModel.swift in Sources */,
 				03C1ABFC2BE39DEC0099DA63 /* LabESClient.swift in Sources */,
+				037ACE992BF509220053AC9F /* LabProcUtils.swift in Sources */,
 				0368545E2BBEF25700C2E095 /* LabFileOpenChartView.swift in Sources */,
 				036854632BC3034900C2E095 /* LabAuthChartView.swift in Sources */,
 			);
@@ -426,7 +438,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 0.1.2;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
@@ -461,7 +473,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 0.1.2;
+				MARKETING_VERSION = 0.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
