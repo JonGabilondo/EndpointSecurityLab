@@ -15,7 +15,6 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
     var subcribeEvents: [es_event_type_t] = []
     var labEsClient : LabESClient? = nil
     static let sharedInstance = LabAntitamperingJob()
-//    var installerProcess : es_process_t? = nil
     
     init() {
         self.subcribeEvents = [
@@ -29,7 +28,7 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
             ES_EVENT_TYPE_AUTH_SIGNAL,
             ES_EVENT_TYPE_AUTH_EXCHANGEDATA
         ]
-        self.labEsClient = LabESClient(listener: self, name: "Ancestors")
+        self.labEsClient = LabESClient(listener: self, name: "Antitampering Job")
     }
     
     func start() -> Bool {
@@ -93,6 +92,7 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
                 }
             }
             
+            // do not allow systemextensionsctl on our extensions
             if (targetProc.pointee.is_platform_binary &&
                 String(cString: UnsafePointer(targetProc.pointee.signing_id.data)) == String("com.apple.systemextensionsctl"))  &&
                 !isResponsibleProcessTrusted(process: targetProc) {
@@ -107,17 +107,32 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
                     return
                 }
             }
-            
+
+            // allow calling ZEP activate/deactivate only if parent or resp is Zscaler
+            if (isZEPProcess(process: targetProc)) {
+                if !isProcessTrusted(auditToken: message.pointee.process.pointee.parent_audit_token) && !isResponsibleProcessTrusted(process: targetProc) {
+                    let args = collectExecArgs(message: message)
+                    os_log("EVENT:%{public}s DENIED args:'%{public}s' signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, args, String(cString: UnsafePointer(targetProc.pointee.signing_id.data)))
+                    es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_DENY, false)
+                    return
+                } else {
+                    let args = collectExecArgs(message: message)
+                    os_log("EVENT:%{public}s ALLOWED args:'%{public}s' signing_id:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, args, String(cString: UnsafePointer(targetProc.pointee.signing_id.data)))
+                    es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
+                    return
+                }
+            }
+
             // Find if ZDP installer launched. NOT necesary ! The installer's file-operations responsible is the App from where it was launched,
 //            if (targetProc.pointee.is_platform_binary &&
 //                String(cString: UnsafePointer(targetProc.pointee.signing_id.data)) == String("com.apple.installer")) &&
 //                isResponsibleProcessTrusted(process: targetProc) {
-//                
+//
 //                let args = collectExecArgs(message: message)
 //                if args.contains("-pkg") && args.contains("ZDP-mac-")  { // quick hack
-//                    
+//
 //                    installerProcess?.audit_token = targetProc.pointee.audit_token
-//                    
+//
 //                    os_log("EVENT:%{public}s ZDP PKG install start by proc pid:%d  id:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, audit_token_to_pid(targetProc.pointee.audit_token), String(cString: UnsafePointer(targetProc.pointee.signing_id.data)))
 //                }
 //
@@ -145,9 +160,13 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
             // There are so many processes that open our files : com.apple.mdworker_shared, com.apple.sharedfilelistd, com.apple.CodeSigningHelper, com.apple.mds, com.apple.endpointsecurityd, pid=1 ...
             // We have to let pid=1 to open the file, "com.apple.xpc.proxy" as well, the icons daemons too !
             // How about allowing all opens ?
+            // IMPORTANT :
+            //      launchd pid 1 is opening out daemons plists, we have to allow it
+            //      FILEOP:ES_EVENT_TYPE_AUTH_OPEN proc:com.apple.xpc.launchd pid:1  rpid:1 ppid:0 uid:0 file1:'/Library/Application Support/Zscaler/ZDP/LaunchPlists/com.zscaler.zdp.esd.plist' file2:''
+            
             /*
              filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data)))
-             // launchd pid 1 is opening out daemons plists, we have to allow it
+             // IMPORTANT : launchd pid 1 is opening out daemons plists, we have to allow it
              if  !(isAppleProcess(process: message.pointee.process) && (message.pointee.process.pointee.ppid == 1)) &&  // we think that processes from apple that have ppid == 1 are processes that can open our files
              !isLaunchdProcess(process: message.pointee.process) &&
              isFileOperationInZDPDeployment(filePath: filePath) &&
@@ -163,7 +182,7 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
              */
             
             
-            // make it simpler allow all read-only modes
+            // make it simpler allow all read-only modes, NO ! we dont have to let read some files, like the sdk libs
             // allow modify open only to trusted apps
             if (hasFileModificationFlags(fflag: message.pointee.event.open.fflag)) {
 
@@ -198,6 +217,10 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
         case ES_EVENT_TYPE_AUTH_UNLINK:
             filePath = FilePath(String(cString: UnsafePointer(message.pointee.event.unlink.target.pointee.path.data)))
             if isFileOperationInZDPDeployment(filePath: filePath) && !isResponsibleProcessTrusted(process: message.pointee.process) {
+                let procs = getProcessTree(process: message.pointee.process)
+                os_log("EVENT:%{public}s DENIED %{public}s file:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, procs, filePath.string)
+                es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_DENY, false)
+            } else if (isFileOperationInZEPSysex(filePath: filePath)) {
                 let procs = getProcessTree(process: message.pointee.process)
                 os_log("EVENT:%{public}s DENIED %{public}s file:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, procs, filePath.string)
                 es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_DENY, false)
@@ -248,9 +271,9 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
                 if isZscalerProcess(process: sendingProcess) {
                     // allow
                 } else if isLaunchdProcess(process: sendingProcess) && sendingProcess.pointee.ppid == 0 {
-                    // allow
-                } else if isAppleProcess(process: sendingProcess) && sendingProcess.pointee.ppid == 1 && audit_token_to_pid(sendingProcess.pointee.audit_token) == audit_token_to_pid(sendingProcess.pointee.responsible_audit_token) { // spinlock like
-                    // allow
+                    // allow. the launchctl from the disable scripts executed by ZCC arrive here.  no rpid !
+                } else if isAppleProcess(process: sendingProcess) && isLaunchdProcess(process: sendingProcess) && audit_token_to_pid(sendingProcess.pointee.audit_token) == audit_token_to_pid(sendingProcess.pointee.responsible_audit_token) { // spinlock like
+                    // allow launchd or launchservicesd
                 } else {
                     os_log("EVENT:%{public}s DENIED sig:%d from:%{public}s to:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, message.pointee.event.signal.sig, String(cString: UnsafePointer(sendingProcess.pointee.signing_id.data)), String(cString: UnsafePointer(targetProcess.pointee.signing_id.data)))
                     authResult = ES_AUTH_RESULT_DENY
@@ -268,7 +291,11 @@ class LabAntitamperingJob : LabESClientListenerProtocol {
 
     
     private func isFileOperationInZDPDeployment(filePath: FilePath) -> Bool {
-        return filePath.starts(with: "/Library/Application Support/Zscaler/")
+        return filePath.starts(with: "/Library/Application Support/Zscaler/") // ZDP or the whole Zscaler ?
+    }
+
+    private func isFileOperationInZEPSysex(filePath: FilePath) -> Bool {
+        return filePath.starts(with: "/Library/SystemExtensions/") && filePath.string.contains("com.zscaler.zep.at.systemextension")
     }
 
     

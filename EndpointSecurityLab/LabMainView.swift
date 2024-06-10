@@ -59,6 +59,14 @@ func stopAntitampering() -> Bool {
     return LabAntitamperingJob.sharedInstance.stop()
 }
 
+func startPrintingBlockingJob() -> Bool {
+    return LabPrintingBlockJob.sharedInstance.start()
+}
+
+func stopPrintingBlockingJob() -> Bool {
+    return LabPrintingBlockJob.sharedInstance.stop()
+}
+
 struct LabMainView: View {
     @State var isAuthMetricsRunning: Bool = false
     @State var authMetricsProgressOpacity: Double = 0.0
@@ -75,6 +83,10 @@ struct LabMainView: View {
     @State var isAntitamperingRunning: Bool = false
     @State var antitamperingProgressOpacity: Double = 0.0
     @State var antitamperingButtonLabel: String = "Start"
+
+    @State var isPrintingRunning: Bool = false
+    @State var printingProgressOpacity: Double = 0.0
+    @State var printingButtonLabel: String = "Start"
 
     @Environment(\.openWindow) private var openWindow
 
@@ -191,7 +203,32 @@ struct LabMainView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            
+
+            GroupBox(label: Label("Printing Block", systemImage: "hammer").fontWeight(.bold)) {
+                HStack {
+                    Button(printingButtonLabel) {
+                        if isPrintingRunning {
+                            if stopPrintingBlockingJob() {
+                                printingButtonLabel = "Start"
+                                isPrintingRunning.toggle()
+                            }
+                        } else {
+                            if startPrintingBlockingJob() {
+                                printingButtonLabel = "Stop"
+                                isPrintingRunning.toggle()
+                            }
+                        }
+                        printingProgressOpacity = isPrintingRunning ?1.0 :0.0
+                    }
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(0.5)
+                        .disabled(!isPrintingRunning)
+                        .opacity(printingProgressOpacity)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
         }
         .padding()
         .focusable(false)

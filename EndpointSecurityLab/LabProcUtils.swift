@@ -7,6 +7,7 @@
 
 import Foundation
 import EndpointSecurity
+import System
 
 func getProcessPath(pid : pid_t) -> String {
     
@@ -78,6 +79,28 @@ func collectExecArgs(message: UnsafePointer<es_message_t>) -> String
     return cmd;
 }
 
+func collectExecArgsArray(message: UnsafePointer<es_message_t>) -> [String]
+{
+    var argc : UInt32 = 0
+    withUnsafePointer(to: message.pointee.event.exec) { pointer in
+        argc = es_exec_arg_count(pointer)
+    }
+     
+    var argv : [String] = []
+    for i in 0..<argc { //argv[0] - process name
+       
+        var param : es_string_token_t = es_string_token_t()
+        withUnsafePointer(to: message.pointee.event.exec) { pointer in
+            param = es_exec_arg(pointer, i)
+        }
+        let arg : String = String(cString: UnsafePointer(param.data))
+        argv.append(arg)
+    }
+
+    return argv;
+}
+
+
 func isAppleProcess(process: UnsafePointer<es_process_t>) -> Bool {
 
     return process.pointee.is_platform_binary
@@ -85,7 +108,8 @@ func isAppleProcess(process: UnsafePointer<es_process_t>) -> Bool {
 
 func isLaunchdProcess(process: UnsafePointer<es_process_t>) -> Bool {
 
-    return audit_token_to_pid(process.pointee.audit_token) == 1
+    return audit_token_to_pid(process.pointee.audit_token) == 1  || // sbin/launchd
+            (process.pointee.signing_id.data != nil && String( cString: process.pointee.signing_id.data) == "com.apple.launchservicesd")
 }
 
 func isZscalerProcess(process: UnsafePointer<es_process_t>) -> Bool {
@@ -98,6 +122,15 @@ func isZscalerProcess(process: UnsafePointer<es_process_t>) -> Bool {
         return true
     }
         
+    return false
+}
+
+func isZEPProcess(process: UnsafePointer<es_process_t>) -> Bool {
+
+    if  process.pointee.signing_id.data != nil && String( cString: process.pointee.signing_id.data) == "com.zscaler.zep.app" {
+        return true
+    }
+            
     return false
 }
 
@@ -136,6 +169,26 @@ func isProcessTrusted(process: UnsafePointer<es_process_t>) -> Bool {
         
     return false
 }
+
+func isProcessTrusted(auditToken: audit_token_t) -> Bool {
+
+    let processPath = getProcessPath(pid: audit_token_to_pid(auditToken))
+    
+    if processPath.starts(with: "/Library/Application Support/Zscaler/") { // quick hack
+        return true
+    }
+
+    if processPath.starts(with: "/Applications/Zscaler/") { // quick hack
+        return true
+    }
+
+    if processPath.contains("EPSdkInvoke") { // quick hack
+        return true
+    }
+
+    return false
+}
+
 
 func isResponsibleProcessTrusted(process: UnsafePointer<es_process_t>) -> Bool {
 
@@ -192,6 +245,25 @@ func isResponsibleProcessTrusted(process: UnsafePointer<es_process_t>) -> Bool {
 //
 //        let rpath = responsibleApp!.executableURL?.absoluteString ?? ""
 //        return rpath.starts(with: "/Library/Application Support/Zscaler/") || rpath.starts(with: "/Applications/Zscaler/")
+}
+
+func isCupsFilterProcess(process: UnsafePointer<es_process_t>) -> Bool {
+    
+    let exeFilePath = FilePath(String(cString: UnsafePointer(process.pointee.executable.pointee.path.data)))
+    
+    return exeFilePath.starts(with: "/usr/libexec/cups/filter/")
+}
+
+func isCupsBackendProcess(process: UnsafePointer<es_process_t>) -> Bool {
+    
+    let exeFilePath = FilePath(String(cString: UnsafePointer(process.pointee.executable.pointee.path.data)))
+    
+    return exeFilePath.starts(with: "/usr/libexec/cups/backend/")
+}
+
+func isCupsBackendOrFilterProcess(process: UnsafePointer<es_process_t>) -> Bool {
+    
+    return isCupsFilterProcess(process: process) || isCupsBackendProcess(process: process)
 }
 
 func isProcessAlive(targetPID :pid_t) -> Bool

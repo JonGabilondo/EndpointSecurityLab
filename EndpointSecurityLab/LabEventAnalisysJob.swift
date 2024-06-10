@@ -25,7 +25,7 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             ES_EVENT_TYPE_NOTIFY_CREATE,
             ES_EVENT_TYPE_NOTIFY_OPEN
         ]
-        self.labEsClient = LabESClient(listener: self, name: "Ancestors")
+        self.labEsClient = LabESClient(listener: self, name: "Event Analisys")
     }
     
     func start() -> Bool {
@@ -46,7 +46,6 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
     
     func handleNotify(message : UnsafePointer<es_message_t>) -> Void {
         
-        var processesInfo = ""
         var process = message.pointee.process
         var parentProcessPath = ""
         if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_FORK) {
@@ -57,8 +56,11 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
         var args = ""
         if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_EXEC) {
             args = collectExecArgs(message: message)
-            parentProcessPath = String(cString: UnsafePointer(process.pointee.executable.pointee.path.data))
-            process = message.pointee.event.exec.target
+            
+            let str1 = getProcessTree(process: message.pointee.process)
+            let str2 = getProcessTree(process: message.pointee.event.exec.target)
+            os_log("EVENT:%{public}s args:%{public}s %{public}s TARGET[%{public}s]", ESEventTypes[message.pointee.event_type.rawValue]!, args, str1, str2)
+            return
         }
         
         if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_SIGNAL) {
@@ -68,15 +70,26 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             // zdpd is sending signals to zdpclassifier, if sending process is zscaler process then allow it
             // EVENT:NOTIFY_SIGNAL 19 Proc[pid:35072 path:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd] Parent[pid:1 ppath:] Resp[pid:35072 rpath:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd] TARGET[Proc[pid:35095 path:/Library/Application Support/Zscaler/ZDP/bin/zdpclassifier] Parent[pid:35072 ppath:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd] Resp[pid:35072 rpath:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd]]
             
-            // crash ?  allow if proc is aple's and ppid==1 ? and pid == rpid ?
+            // spinlock.  allow if proc is aple's and ppid==1 ? and pid == rpid ?
             // EVENT:NOTIFY_SIGNAL Proc[pid:774 path:/usr/sbin/spindump] Parent[pid:1 ppath:] Resp[pid:774 rpath:/usr/sbin/spindump] TARGET[Proc[pid:28890 path:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd] Parent[pid:1 ppath:] Resp[pid:28890 rpath:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd]]
             
             // kill from terminal
             // EVENT:NOTIFY_SIGNAL Proc[pid:28988 path:/bin/kill] Parent[pid:28987 ppath:] Resp[pid:627 rpath:/Applications/iTerm.app/Contents/MacOS/iTerm2] TARGET[Proc[pid:28952 path:/Library/Application Support/Zscaler/ZDP/bin/zdpd.app/Contents/MacOS/zdpd] Parent[pid:1 ppath:] Resp[pid:28952 rpath:]]
             
-            // on zccc dlp disable
+            // on zcc dlp disable
             // EVENT:NOTIFY_SIGNAL Proc[pid:1 path:/sbin/launchd] Parent[pid:0 ppath:] Resp[pid:1 rpath:/sbin/launchd] TARGET[Proc[pid:33520 path:/Library/Application Support/Zscaler/ZDP/bin/zdpagent.app/Contents/MacOS/zdpagent] Parent[pid:1 ppath:] Resp[pid:33520 rpath:]]
             
+            // launchservicesd is sending sig:19 on running app from doubleclick in finder
+            // EVENT:NOTIFY_SIGNAL 19 Proc[pid:352 path:/System/Library/CoreServices/launchservicesd] Parent[pid:1 ppath: pb:true] Resp[pid:352 rpath:/System/Library/CoreServices/launchservicesd] TARGET[Proc[pid:94119 path:/Applications/Zscaler/ZEP.app/Contents/MacOS/ZEP] Parent[pid:1 ppath: pb:false] Resp[pid:94119 rpath:/Applications/Zscaler/ZEP.app/Contents/MacOS/ZEP]]
+            
+            // dropbox !!! are we breaking anything ?
+            /*
+             debug    20:28:01.891474+0300    com.zscaler.zep.at    5028    0x23c63    [5028:146531] [AntitamperingESClientListener.mm HandleAuthMessageSignal:443] EVENT Blocked signal:0 from process:com.getdropbox.dropbox pid:881 to process:com.zscaler.service pid:509 rpid:881 ppid:1 uid:502
+             debug    20:28:01.891671+0300    com.zscaler.zep.at    5028    0x23c63    [5028:146531] [AntitamperingESClientListener.mm HandleAuthMessageSignal:443] EVENT Blocked signal:0 from process:com.getdropbox.dropbox pid:881 to process:com.zscaler.tunnel pid:510 rpid:881 ppid:1 uid:502
+             debug    20:28:01.924958+0300    com.zscaler.zep.at    5028    0x23c63    [5028:146531] [AntitamperingESClientListener.mm HandleAuthMessageSignal:443] EVENT Blocked signal:0 from process:com.getdropbox.dropbox pid:881 to process:com.zscaler.UPMServiceController pid:955 rpid:881 ppid:1 uid:502
+             debug    20:28:01.942293+0300    com.zscaler.zep.at    5028    0x23c63    [5028:146531] [AntitamperingESClientListener.mm HandleAuthMessageSignal:443] EVENT Blocked signal:0 from process:com.getdropbox.dropbox pid:881 to process:com.zscaler.zep.at pid:5028 rpid:881 ppid:1 uid:502
+
+             */
             let process = message.pointee.process
             let str1 = getProcessTree(process: process)
             let str2 = getProcessTree(process: message.pointee.event.signal.target)

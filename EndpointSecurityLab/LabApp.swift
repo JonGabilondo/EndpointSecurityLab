@@ -23,7 +23,7 @@ struct EndpointSecurityLabApp: App {
             LabMainView()
                 .frame(
                     minWidth: 350, maxWidth: 350,
-                    minHeight: 320, maxHeight: 320)
+                    minHeight: 360, maxHeight: 360)
         }
         .windowResizability(.contentSize)
         
