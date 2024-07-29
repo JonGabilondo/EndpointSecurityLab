@@ -18,9 +18,10 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
 
     init() {
         self.subcribeEvents = [
-            ES_EVENT_TYPE_NOTIFY_EXEC,
-            ES_EVENT_TYPE_NOTIFY_EXIT,
-            ES_EVENT_TYPE_AUTH_OPEN,
+            ES_EVENT_TYPE_NOTIFY_OPEN,
+//            ES_EVENT_TYPE_NOTIFY_EXEC,
+//            ES_EVENT_TYPE_NOTIFY_EXIT,
+//            ES_EVENT_TYPE_AUTH_OPEN,
             ES_EVENT_TYPE_AUTH_EXEC
 //            ES_EVENT_TYPE_AUTH_CLONE ,
 //            ES_EVENT_TYPE_AUTH_CLONE ,
@@ -70,14 +71,24 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
                     let argsArray = collectExecArgsArray(message: message)
                     os_log("EVENT:%{public}s BACKEND JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, argsArray[1], argsArray.count)
                     
-//                    let jobID = Int32(argsArray[1])
+                    let jobID = Int32(argsArray[1])
 //                    let dest = cups_dest_t()//name: "", instance: "", is_default: 0, num_options: 0, options: NULL)
 //                    let http = http_t()
-                                        
-//                    let status = cupsCancelJob("Brother_HL_1210W_series", jobID!);
-//                    os_log("EVENT:%{public}s BACKEND CANCELLED JOB status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, status, argsArray[1], argsArray.count)
-//                    let status = cupsCancelDestJob(NULL, dest.instance, jobID);
+                                                            
+                    let status = cupsCancelJob("XXX"/*Brother_HL_1210W_series"*/, jobID!); // TOO SLOW TO STOP TH EPRINT, OFTEN THE PRINT HAPPENS !
+                            // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
+                    os_log("EVENT:%{public}s CUPS JOB CANCELLED:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
 
+                }
+                else if isCupsFilterProcess(process: message.pointee.event.exec.target) {
+                    let argsArray = collectExecArgsArray(message: message)
+                    let jobID = Int32(argsArray[1])
+    //                os_log("EVENT:%{public}s FILTER CANCELLED JOB:%d  args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, argsArray.count)
+                    
+                    let status = cupsCancelJob("Brother_HL_1210W_series OR ANY NAME", jobID!); // TOO SLOW TO STOP TH EPRINT, OFTEN THE PRINT HAPPENS !
+                            // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
+                    os_log("EVENT:%{public}s CUPS JOB CANCELLED:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
+                    
                 }
                 
                 syncQueue.sync {
@@ -94,6 +105,26 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
                 }
             }
             break
+        case ES_EVENT_TYPE_NOTIFY_OPEN:
+            
+            // LAST SECURITY STEP, it should not arrive here, the blocking of backends and filters should do the printing blocking.
+
+            let cupsFilePath = FilePath(String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data)))
+
+//            os_log("EVENT '%{public}s' proc:'%{public}s' file:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, String(cString: UnsafePointer(message.pointee.process.pointee.executable.pointee.path.data)), cupsFilePath.string)
+
+            if isCupsBackendOrFilterProcess(process: message.pointee.process) && isCupsDataFile(filePath: cupsFilePath) {
+                
+                os_log("EVENT '%{public}s' FROM CUPS. file:'%{public}s' process:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, cupsFilePath.string, String(cString:message.pointee.process.pointee.executable.pointee.path.data))
+
+//                syncQueue.sync {
+//                    let cupsPid = audit_token_to_pid(message.pointee.process.pointee.audit_token)
+//                    let args = cupsProcesses[cupsPid]
+//                    os_log("PRINT EVENT with file:'%{public}s' proc_args:'%{public}s'", cupsFilePath.string, args!)
+//                }
+            }
+            break
+
         default:
             break;
         }
@@ -115,23 +146,39 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
                 let deadline_delta_secs = deadline_delta_nano/UInt64(1e9);
                 
                 let argsArray = collectExecArgsArray(message: message)
+                var args1 = ""
+                var args2 = ""
+                for arg in 0...4 {
+                    args1 += argsArray[arg]
+                }
+                args2 += argsArray[5]
                 let jobID = Int32(argsArray[1])
-                os_log("EVENT:%{public}s BACKEND JobId:%d args-count:%d timeout(s):%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, argsArray.count, deadline_delta_secs)
-                
+                os_log("EVENT:%{public}s BACKEND 1 JobId:%d args-count:%d timeout(s):%d args:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, argsArray.count, deadline_delta_secs, args1)
+                os_log("EVENT:%{public}s args:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, args2)
+
                 let isThePrinter = true
                 if (isThePrinter) {
                     es_retain_message(message)
+                    
+//                    add to vector of pending responses -> ........
+//                    dispatch after {
+//                        deal with the vector
+//                        dispatch after if pending quue
+//                    }
+                    // no GCD thread handling pending responses
+                    // or condition
                     DispatchQueue.global().async { [self] in
 //                        let dest = cups_dest_t()//name: "", instance: "", is_default: 0, num_options: 0, options: NULL)
 //                        let http = http_t()
                               
-                        let status = cupsCancelJob("Brother_HL_1210W_series", jobID!);
+                        let status = cupsCancelJob("XXX"/*Brother_HL_1210W_series"*/, jobID!);
                         // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
                         sleep(1)
                         os_log("EVENT:%{public}s BACKEND CANCELLED JOB:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
                         es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
                         es_release_message(message)
                     }
+
                 } else {
                     es_respond_auth_result((labEsClient?.esClientPtr)!, message, ES_AUTH_RESULT_ALLOW, false)
                 }
@@ -140,7 +187,7 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
                 let jobID = Int32(argsArray[1])
 //                os_log("EVENT:%{public}s FILTER CANCELLED JOB:%d  args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, argsArray.count)
                 
-                let isThePrinter = true
+                let isThePrinter = false
                 if (isThePrinter) {
                     es_retain_message(message)
                     DispatchQueue.global().async { [self] in
@@ -182,7 +229,10 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
             os_log("EVENT '%{public}s' proc:'%{public}s' file:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, String(cString: UnsafePointer(message.pointee.process.pointee.executable.pointee.path.data)), cupsFilePath.string)
 
             if isCupsBackendOrFilterProcess(process: message.pointee.process) && isCupsDataFile(filePath: cupsFilePath) {
-                os_log("PRINT EVENT FROM CUPS. file:'%{public}s' ", cupsFilePath.string)
+                os_log("PRINT EVENT FROM CUPS. file:'%{public}s' process:'%{public}s'", cupsFilePath.string, message.pointee.process.pointee.executable.pointee.path.data.pointee)
+                
+                // DENY if it is the printer to block, read args.
+                
                 syncQueue.sync {
                     let cupsPid = audit_token_to_pid(message.pointee.process.pointee.audit_token)
                     let args = cupsProcesses[cupsPid]

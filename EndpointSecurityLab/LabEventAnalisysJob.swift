@@ -23,7 +23,12 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             ES_EVENT_TYPE_NOTIFY_EXEC,
             ES_EVENT_TYPE_NOTIFY_UNLINK, 
             ES_EVENT_TYPE_NOTIFY_CREATE,
-            ES_EVENT_TYPE_NOTIFY_OPEN
+            ES_EVENT_TYPE_NOTIFY_OPEN,
+            ES_EVENT_TYPE_NOTIFY_CLONE,
+            ES_EVENT_TYPE_NOTIFY_CLOSE,
+            ES_EVENT_TYPE_NOTIFY_COPYFILE,
+            ES_EVENT_TYPE_NOTIFY_RENAME,
+            ES_EVENT_TYPE_NOTIFY_EXCHANGEDATA
         ]
         self.labEsClient = LabESClient(listener: self, name: "Event Analisys")
     }
@@ -104,6 +109,10 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
         let oppid = process.pointee.original_ppid
 
         var filePath = ""
+        var filePath2 = ""
+        var fileCloseModified = false
+        var fileSize : Int64 = 0
+        
         switch message.pointee.event_type {
         case ES_EVENT_TYPE_NOTIFY_CREATE:
             if message.pointee.event.create.destination_type == ES_DESTINATION_TYPE_EXISTING_FILE {
@@ -114,6 +123,33 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             break
         case ES_EVENT_TYPE_NOTIFY_OPEN:
             filePath = String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data))
+            break
+        case ES_EVENT_TYPE_NOTIFY_CLOSE:
+            filePath = String(cString: UnsafePointer(message.pointee.event.close.target.pointee.path.data))
+            fileCloseModified = message.pointee.event.close.modified
+            fileSize = message.pointee.event.close.target.pointee.stat.st_size
+            break
+        case ES_EVENT_TYPE_NOTIFY_COPYFILE:
+            filePath = String(cString: UnsafePointer(message.pointee.event.copyfile.source.pointee.path.data))
+            break
+        case ES_EVENT_TYPE_NOTIFY_CLONE:
+            filePath = String(cString: UnsafePointer(message.pointee.event.clone.source.pointee.path.data))
+            break
+        case ES_EVENT_TYPE_NOTIFY_EXCHANGEDATA:
+            filePath = String(cString: UnsafePointer(message.pointee.event.exchangedata.file1.pointee.path.data))
+            filePath2 = String(cString: UnsafePointer(message.pointee.event.exchangedata.file2.pointee.path.data))
+            break
+        case ES_EVENT_TYPE_NOTIFY_RENAME:
+            filePath = String(cString: UnsafePointer(message.pointee.event.rename.source.pointee.path.data))
+            if (message.pointee.event.rename.destination_type == ES_DESTINATION_TYPE_EXISTING_FILE) {
+                filePath2 = String(cString: UnsafePointer(message.pointee.event.rename.destination.existing_file.pointee.path.data))
+            } else {
+                var destination : FilePath
+                destination = .init( String(cString: UnsafePointer(message.pointee.event.rename.destination.new_path.dir.pointee.path.data)))
+                destination.append( String(cString: UnsafePointer(message.pointee.event.rename.destination.new_path.filename.data)))
+                filePath2 = destination.string
+            }
+                
             break
         case ES_EVENT_TYPE_NOTIFY_UNLINK:
             filePath = String(cString: UnsafePointer(message.pointee.event.unlink.target.pointee.path.data))
@@ -136,7 +172,7 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
         } else {
             rpath = getProcessPath(pid: rpid)
         }
-        os_log("EVENT:%{public}s  proc_path:'%{public}s' parent_proc_path:'%{public}s' pid:%d rpid:%d rpath:'%{public}s' ppid:%d ppath:'%{public}s' oppid:%d args:'%{public}s' file:'%{public}s'", ESEventTypes[message.pointee.event_type.rawValue]!, procPathString, parentProcessPath, pid, rpid, rpath, ppid, ppath, oppid, args, filePath)
+        os_log("EVENT:%{public}s  proc_path:'%{public}s' parent_proc_path:'%{public}s' pid:%d rpid:%d rpath:'%{public}s' ppid:%d ppath:'%{public}s' oppid:%d args:'%{public}s' file1:'%{public}s' size1:%d file2:'%{public}s' close-modified:%d", ESEventTypes[message.pointee.event_type.rawValue]!, procPathString, parentProcessPath, pid, rpid, rpath, ppid, ppath, oppid, args, filePath, fileSize, filePath2, fileCloseModified)
     }
     
     func handleAuth(message : UnsafePointer<es_message_t>) -> Void {
