@@ -46,7 +46,7 @@ func getProcessTree(process: UnsafePointer<es_process_t>) -> String {
         rpath = getProcessPath(pid: rpid)
     }
 
-    return String(format: "Proc[pid:\(pid) path:\(procPath)] Parent[pid:\(ppid) ppath:\(ppath) pb:\(pb)] Resp[pid:\(rpid) rpath:\(rpath)]", arguments: [])
+    return String(format: "Proc[pid:\(pid) path:\(procPath) platf_b:\(pb)] audit_t:\(process.pointee.audit_token) Parent[pid:\(ppid) ppath:\(ppath) ] Resp[pid:\(rpid) rpath:\(rpath)]", arguments: [])
 }
 
 func collectExecArgs(message: UnsafePointer<es_message_t>) -> String

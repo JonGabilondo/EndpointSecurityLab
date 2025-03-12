@@ -444,7 +444,7 @@
 				MARKETING_VERSION = 0.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
+				PROVISIONING_PROFILE_SPECIFIER = "ZDP Endpoint Security Lab DEV";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -478,7 +478,7 @@
 				MARKETING_VERSION = 0.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zscaler.zdp.EndpointSecurityLab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "ZDP Endpoint Security Lab DEV";
+				PROVISIONING_PROFILE_SPECIFIER = "ZDP Endpoint Security Lab DEV";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};

@@ -21,8 +21,12 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             ES_EVENT_TYPE_NOTIFY_SIGNAL,
             ES_EVENT_TYPE_NOTIFY_FORK,
             ES_EVENT_TYPE_NOTIFY_EXEC,
-            ES_EVENT_TYPE_NOTIFY_UNLINK, 
+            ES_EVENT_TYPE_NOTIFY_EXIT,
+            ES_EVENT_TYPE_NOTIFY_LINK,
+            ES_EVENT_TYPE_NOTIFY_READLINK,
+            ES_EVENT_TYPE_NOTIFY_UNLINK,
             ES_EVENT_TYPE_NOTIFY_CREATE,
+//            ES_EVENT_TYPE_NOTIFY_WRITE,
             ES_EVENT_TYPE_NOTIFY_OPEN,
             ES_EVENT_TYPE_NOTIFY_CLONE,
             ES_EVENT_TYPE_NOTIFY_CLOSE,
@@ -58,15 +62,22 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             process = message.pointee.event.fork.child
         }
         
-        var args = ""
         if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_EXEC) {
+            var args = ""
             args = collectExecArgs(message: message)
             
             let str1 = getProcessTree(process: message.pointee.process)
             let str2 = getProcessTree(process: message.pointee.event.exec.target)
-            os_log("EVENT:%{public}s args:%{public}s %{public}s TARGET[%{public}s]", ESEventTypes[message.pointee.event_type.rawValue]!, args, str1, str2)
+            os_log("EVENT:'%{public}s' args:(%{public}s) ORIGINATOR([%{public}s) TARGET(%{public}s)", ESEventTypes[message.pointee.event_type.rawValue]!, args, str1, str2)
             return
         }
+
+        if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_EXIT) {
+            let str1 = getProcessTree(process: message.pointee.process)
+            os_log("EVENT:'%{public}s' PROCESS([%{public}s)", ESEventTypes[message.pointee.event_type.rawValue]!, str1)
+            return
+        }
+
         
         if (message.pointee.event_type == ES_EVENT_TYPE_NOTIFY_SIGNAL) {
             
@@ -115,12 +126,50 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
         
         switch message.pointee.event_type {
         case ES_EVENT_TYPE_NOTIFY_CREATE:
+            var isSymlink = false
+            var mode : mode_t = 0
             if message.pointee.event.create.destination_type == ES_DESTINATION_TYPE_EXISTING_FILE {
                 filePath = String(cString: UnsafePointer(message.pointee.event.create.destination.existing_file.pointee.path.data))
+                mode = message.pointee.event.create.destination.new_path.mode
             } else {
                 filePath = String(cString: UnsafePointer(message.pointee.event.create.destination.new_path.filename.data))
+                mode = message.pointee.event.create.destination.new_path.mode
             }
-            break
+            let procStr = getProcessTree(process: message.pointee.process)
+            
+            // THIS IS THE ONLY WAY TO KNOW IF IT IS A SYMLINK
+            do {
+                let attribs = try FileManager.default.attributesOfItem(atPath: filePath)
+                if let type = attribs[FileAttributeKey.type] {
+                    switch (type as! FileAttributeType) {
+                        case FileAttributeType.typeSymbolicLink:
+                            isSymlink = true
+                        
+                            let pathBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(MAXPATHLEN + 1))
+                            let n = readlink(filePath, pathBuffer, Int(PATH_MAX))
+                            guard n >= 0 else {
+                                exit(0)
+                            }
+                            pathBuffer[n] = 0
+                            let content = String(cString: pathBuffer)
+                            os_log("SYMLINK CONTENT: %{public}s", content)
+                            break
+                        default:
+                            isSymlink = false
+                        }
+                    }
+            } catch {
+                
+            }
+            var args = ""
+            os_log("EVENT:%{public}s proc:'%{public}s' args:'%{public}s' file:'%{public}s' mode:%d symlink:%d", ESEventTypes[message.pointee.event_type.rawValue]!, procStr, args, filePath, mode, isSymlink)
+            return
+        case ES_EVENT_TYPE_NOTIFY_WRITE:
+            let filePath = String(cString: UnsafePointer(message.pointee.event.write.target.pointee.path.data))
+            let procStr = getProcessTree(process: message.pointee.process)
+            var args = ""
+            os_log("EVENT:%{public}s proc:'%{public}s' args:'%{public}s' file:'%{public}s' size:%d ", ESEventTypes[message.pointee.event_type.rawValue]!, procStr, args, filePath, message.pointee.event.write.target.pointee.stat.st_size)
+            return
         case ES_EVENT_TYPE_NOTIFY_OPEN:
             filePath = String(cString: UnsafePointer(message.pointee.event.open.file.pointee.path.data))
             break
@@ -128,7 +177,10 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
             filePath = String(cString: UnsafePointer(message.pointee.event.close.target.pointee.path.data))
             fileCloseModified = message.pointee.event.close.modified
             fileSize = message.pointee.event.close.target.pointee.stat.st_size
-            break
+            let procStr = getProcessTree(process: message.pointee.process)
+            var args = ""
+            os_log("EVENT:%{public}s proc:'%{public}s' args:'%{public}s' file:'%{public}s' size:%d close-modified:%d", ESEventTypes[message.pointee.event_type.rawValue]!, procStr, args, filePath, fileSize, fileCloseModified)
+            return
         case ES_EVENT_TYPE_NOTIFY_COPYFILE:
             filePath = String(cString: UnsafePointer(message.pointee.event.copyfile.source.pointee.path.data))
             break
@@ -149,14 +201,28 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
                 destination.append( String(cString: UnsafePointer(message.pointee.event.rename.destination.new_path.filename.data)))
                 filePath2 = destination.string
             }
-                
             break
         case ES_EVENT_TYPE_NOTIFY_UNLINK:
             filePath = String(cString: UnsafePointer(message.pointee.event.unlink.target.pointee.path.data))
             let process = message.pointee.process
-            let str1 = getProcessTree(process: process)
-            os_log("EVENT:%{public}s %{public}s file:%{public}s]", ESEventTypes[message.pointee.event_type.rawValue]!, str1, filePath)
+            let procStr = getProcessTree(process: process)
+            os_log("EVENT:%{public}s %{public}s file:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, procStr, filePath)
             return
+
+        case ES_EVENT_TYPE_NOTIFY_LINK:
+            let sourceFilePath = String(cString: UnsafePointer(message.pointee.event.link.source.pointee.path.data))
+            let targetDirPath = String(cString: UnsafePointer(message.pointee.event.link.target_dir.pointee.path.data))
+            let targetFileName = String(cString: UnsafePointer(message.pointee.event.link.target_filename.data))
+            let procStr = getProcessTree(process: message.pointee.process)
+            os_log("EVENT:%{public}s source_file:'%{public}s' size:%d target_dir:'%{public}s' target_filename:'%{public}s' proc:'%{public}s'" , ESEventTypes[message.pointee.event_type.rawValue]!, sourceFilePath, message.pointee.event.link.source.pointee.stat.st_size, targetDirPath, targetFileName, procStr)
+            return
+
+        case ES_EVENT_TYPE_NOTIFY_READLINK:
+            let sourceFilePath = String(cString: UnsafePointer(message.pointee.event.readlink.source.pointee.path.data))
+            let procStr = getProcessTree(process: message.pointee.process)
+            os_log("EVENT:%{public}s source_file:'%{public}s' size:%d  proc:'%{public}'s" , ESEventTypes[message.pointee.event_type.rawValue]!, sourceFilePath, message.pointee.event.readlink.source.pointee.stat.st_size, procStr)
+            return
+
         default:
             break
         }
@@ -172,6 +238,7 @@ class LabEventAnalisysJob : LabESClientListenerProtocol {
         } else {
             rpath = getProcessPath(pid: rpid)
         }
+        var args = ""
         os_log("EVENT:%{public}s  proc_path:'%{public}s' parent_proc_path:'%{public}s' pid:%d rpid:%d rpath:'%{public}s' ppid:%d ppath:'%{public}s' oppid:%d args:'%{public}s' file1:'%{public}s' size1:%d file2:'%{public}s' close-modified:%d", ESEventTypes[message.pointee.event_type.rawValue]!, procPathString, parentProcessPath, pid, rpid, rpath, ppid, ppath, oppid, args, filePath, fileSize, filePath2, fileCloseModified)
     }
     

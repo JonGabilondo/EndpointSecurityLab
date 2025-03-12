@@ -18,11 +18,11 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
 
     init() {
         self.subcribeEvents = [
-            ES_EVENT_TYPE_NOTIFY_OPEN,
-//            ES_EVENT_TYPE_NOTIFY_EXEC,
+//            ES_EVENT_TYPE_NOTIFY_OPEN,
+            ES_EVENT_TYPE_NOTIFY_EXEC,
 //            ES_EVENT_TYPE_NOTIFY_EXIT,
 //            ES_EVENT_TYPE_AUTH_OPEN,
-            ES_EVENT_TYPE_AUTH_EXEC
+//            ES_EVENT_TYPE_AUTH_EXEC
 //            ES_EVENT_TYPE_AUTH_CLONE ,
 //            ES_EVENT_TYPE_AUTH_CLONE ,
 //            ES_EVENT_TYPE_AUTH_CREATE,
@@ -56,10 +56,12 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
     
     func handleNotify(message : UnsafePointer<es_message_t>) -> Void {
         
+        let doCancelCupsJob = false
+        
         switch (message.pointee.event_type) {
         case ES_EVENT_TYPE_NOTIFY_EXEC:
             if isCupsBackendOrFilterProcess(process: message.pointee.event.exec.target) {
-                
+
                 let procs1 = getProcessTree(process: message.pointee.process)
                 let procs2 = getProcessTree(process: message.pointee.event.exec.target)
 
@@ -69,26 +71,30 @@ class LabPrintingBlockJob : LabESClientListenerProtocol {
 
                 if isCupsBackendProcess(process: message.pointee.event.exec.target) {
                     let argsArray = collectExecArgsArray(message: message)
-                    os_log("EVENT:%{public}s BACKEND JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, argsArray[1], argsArray.count)
+                    os_log("EVENT:%{public}s BACKEND JobId:%{public}s args-count:%d arg:%{public}s arg:%{public}s arg:%{public}s arg:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, argsArray[1], argsArray.count, argsArray[2], argsArray[3], argsArray[4], argsArray[5])
                     
-                    let jobID = Int32(argsArray[1])
 //                    let dest = cups_dest_t()//name: "", instance: "", is_default: 0, num_options: 0, options: NULL)
 //                    let http = http_t()
-                                                            
-                    let status = cupsCancelJob("XXX"/*Brother_HL_1210W_series"*/, jobID!); // TOO SLOW TO STOP TH EPRINT, OFTEN THE PRINT HAPPENS !
-                            // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
-                    os_log("EVENT:%{public}s CUPS JOB CANCELLED:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
+                         
+                    if (doCancelCupsJob) {
+                        let jobID = Int32(argsArray[1])
+                        let status = cupsCancelJob("XXX"/*Brother_HL_1210W_series"*/, jobID!); // TOO SLOW TO STOP TH EPRINT, OFTEN THE PRINT HAPPENS !
+                                // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
+                        os_log("EVENT:%{public}s CUPS JOB CANCELLED:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
+                    }
 
                 }
                 else if isCupsFilterProcess(process: message.pointee.event.exec.target) {
                     let argsArray = collectExecArgsArray(message: message)
                     let jobID = Int32(argsArray[1])
-    //                os_log("EVENT:%{public}s FILTER CANCELLED JOB:%d  args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, argsArray.count)
-                    
-                    let status = cupsCancelJob("Brother_HL_1210W_series OR ANY NAME", jobID!); // TOO SLOW TO STOP TH EPRINT, OFTEN THE PRINT HAPPENS !
-                            // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
-                    os_log("EVENT:%{public}s CUPS JOB CANCELLED:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
-                    
+                    os_log("EVENT:%{public}s FILTER JobId:%{public}s args-count:%d arg:%{public}s arg:%{public}s arg:%{public}s arg:%{public}s last:%{public}s", ESEventTypes[message.pointee.event_type.rawValue]!, argsArray[1], argsArray.count, argsArray[2], argsArray[3], argsArray[4],  argsArray[5], argsArray.count==7 ?argsArray[6] :"")
+
+                    if (doCancelCupsJob) {
+                        os_log("EVENT:%{public}s FILTER CANCELLED JOB:%d  args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, argsArray.count)
+                        let status = cupsCancelJob("Brother_HL_1210W_series OR ANY NAME", jobID!); // TOO SLOW TO STOP TH EPRINT, OFTEN THE PRINT HAPPENS !
+                                // let status = cupsCancelDestJob(NULL, dest.instance, jobID); difficult
+                        os_log("EVENT:%{public}s CUPS JOB CANCELLED:%d status:%d JobId:%{public}s args-count:%d", ESEventTypes[message.pointee.event_type.rawValue]!, jobID!, status, argsArray[1], argsArray.count)
+                    }
                 }
                 
                 syncQueue.sync {
